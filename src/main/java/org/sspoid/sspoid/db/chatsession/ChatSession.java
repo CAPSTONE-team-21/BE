@@ -41,10 +41,6 @@ public class ChatSession extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ChatSessionMode mode;
 
-    @Column(name = "skin_type")
-    @Enumerated(EnumType.STRING)
-    private SkinType skinType;
-
     @Column(name = "is_bookmark", nullable = false)
     private boolean isBookmark;
 

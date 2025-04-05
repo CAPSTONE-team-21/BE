@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.sspoid.sspoid.db.BaseEntity;
 import org.sspoid.sspoid.db.chatsession.ChatSession;
+import org.sspoid.sspoid.db.chatsession.SkinType;
 
 @Entity
 @Getter
@@ -33,11 +34,17 @@ public class ChatMessage extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_session_id", nullable = false)
-    private ChatSession chatSessionId;
+    private ChatSession chatSession;
 
     @Column
     @Enumerated(EnumType.STRING)
     private SenderType sender;
+
+
+    @Column(name = "skin_type")
+    @Enumerated(EnumType.STRING)
+    private SkinType skinType;
+
     @Lob
     @Column(name = "message", nullable = false)
     private String message;
