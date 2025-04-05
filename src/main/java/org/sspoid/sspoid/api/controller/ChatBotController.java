@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatBotController {
 
-    private ChatBotService chatBotService;
+    private final ChatBotService chatBotService;
 
     // 1. 세션 생성
     @PostMapping("/api/chat/sessions")
@@ -28,28 +28,29 @@ public class ChatBotController {
         return ResponseEntity.ok(chatBotService.createSession(request));
     }
 
-    // 2. 메시지 전송 → 유저 메시지 저장 + 챗봇 응답 저장
-    @PostMapping("/api/chat/messages")
-    private ResponseEntity<ChatMessageResponse> sendMessage(@RequestBody ChatMessage message) {
-        return ResponseEntity.ok(chatBotService.sendMessage(message));
-
-    }
-    // 3. 세션 메시지 리스트 조회
-    @GetMapping("/api/chat/sessions/{id}/messages")
-    private ResponseEntity<List<ChatMessageResponse>> getMessage(@PathVariable Long id) {
-        return ResponseEntity.ok(chatBotService.getMessage(id));
-    }
-
-    // 4. 세션 목록 조회 (필터 가능)
+    // 2. 세션 목록 조회 (필터 가능)
     @GetMapping("/api/chat/sessions")
     private ResponseEntity<List<ChatSessionResponse>> getSessions() {
         return ResponseEntity.ok(chatBotService.getSessions());
     }
 
+
+    // 3. 메시지 전송
+    @PostMapping("/api/chat/messages")
+    private ResponseEntity<ChatMessageResponse> sendMessage(@RequestBody ChatMessage message) {
+        return ResponseEntity.ok(chatBotService.sendMessage(message));
+
+    }
+    // 4. 세션 메시지 리스트 조회
+    @GetMapping("/api/chat/sessions/{id}/messages")
+    private ResponseEntity<List<ChatMessageResponse>> getMessagesBySessionId(@PathVariable Long id) {
+        return ResponseEntity.ok(chatBotService.getMessagesBySessionId(id));
+    }
+
     // 5. 대화 요약
     @PostMapping("/api/chat/sessions/{id}/summary")
-    private ResponseEntity<ChatSummaryResponse> getSummary(@PathVariable Long SessionId) {
-        return ResponseEntity.ok(chatBotService.getSummary());
+    private ResponseEntity<ChatSummaryResponse> getSummary(@PathVariable Long sessionId) {
+        return ResponseEntity.ok(chatBotService.getSummary(sessionId));
     }
 }
 
