@@ -2,9 +2,10 @@ package org.sspoid.sspoid.api.dto;
 
 import org.sspoid.sspoid.db.chatsession.SkinType;
 
-public record ChatMessageRequest ( //수정
-        Long sessionId,
+import java.util.List;
+
+public record ChatMessageRequest (
+        Long chatSessionId,
         String message,
-        SkinType skinType
-){
-}
+        List<SkinType> skinTypes
+) {}

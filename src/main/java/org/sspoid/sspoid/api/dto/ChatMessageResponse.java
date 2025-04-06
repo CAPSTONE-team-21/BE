@@ -1,13 +1,13 @@
 package org.sspoid.sspoid.api.dto;
 
-import org.sspoid.sspoid.db.chatmassage.ChatMessage;
+import org.sspoid.sspoid.db.chatsession.SkinType;
 
-public record ChatMessageResponse ( //수정
-        String message
-){
-    public static ChatMessageResponse from(ChatMessage chatMessage) {
-        return new ChatMessageResponse(
-                chatMessage.getMessage()
-        );
+import java.util.Map;
+
+public record ChatMessageResponse(
+        Map<SkinType, String> response
+) {
+    public static ChatMessageResponse from(Map<SkinType, String> responseMap) {
+        return new ChatMessageResponse(responseMap);
     }
 }
