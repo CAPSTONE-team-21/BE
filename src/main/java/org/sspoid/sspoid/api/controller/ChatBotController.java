@@ -40,9 +40,12 @@ public class ChatBotController {
     }
 
     //3. 메세지 전송
-    @PostMapping("/api/chat/messages")
-    private ResponseEntity<List<ChatMessageResponse>> sendMessage(@RequestBody ChatMessageRequest message) {
-        return ResponseEntity.ok(chatBotService.sendMessage(message));
+    @PostMapping("/api/chat/{id}/messages")
+    private ResponseEntity<List<ChatMessageResponse>> sendMessage(
+            @PathVariable Long id,
+            @RequestBody ChatMessageRequest message
+    ) {
+        return ResponseEntity.ok(chatBotService.sendMessage(id, message));
     }
 
     // 4. 특정 세션에 저장되어있는 메시지 리스트 조회

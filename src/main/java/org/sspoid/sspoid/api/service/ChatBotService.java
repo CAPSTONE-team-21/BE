@@ -67,14 +67,14 @@ public class ChatBotService {
 
     // 4. 메시지 전송 (유저 메시지 + 챗봇 응답 저장)
     @Transactional
-    public List<ChatMessageResponse> sendMessage(ChatMessageRequest request) {
+    public List<ChatMessageResponse> sendMessage(Long id, ChatMessageRequest request) {
 
         List<SkinType> skinTypes = (request.skinTypes() == null || request.skinTypes().isEmpty())
                 ? DEFAULT_SKIN_TYPES : request.skinTypes();
 
         //1. 메세지 전송
         ChatMessage userMessage = ChatMessage.builder()
-                .chatSessionId(request.chatSessionId())
+                .chatSessionId(id)
                 .sender(SenderType.USER)
                 .skinTypes(skinTypes)
                 .message(request.message())
@@ -88,7 +88,7 @@ public class ChatBotService {
 
             // BOT 메시지 저장 - skinType은 단일로만 저장
             ChatMessage aiMessage = ChatMessage.builder()
-                    .chatSessionId(request.chatSessionId())
+                    .chatSessionId(id)
                     .sender(SenderType.BOT)
                     .skinTypes(List.of(skinType)) // 단일 스킨타입만 저장
                     .message(aiResponse)
