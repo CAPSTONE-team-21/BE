@@ -1,13 +1,21 @@
 package org.sspoid.sspoid.api.dto;
 
 import org.sspoid.sspoid.db.chatmassage.ChatMessage;
+import org.sspoid.sspoid.db.chatmassage.SenderType;
+import org.sspoid.sspoid.db.chatsession.SkinType;
 
-public record ChatMessageResponse ( //수정
+import java.util.List;
+
+public record ChatMessageResponse (
+        SenderType sender,
+        List<SkinType> skinTypes,
         String message
 ){
-    public static ChatMessageResponse from(ChatMessage chatMessage) {
+    public static ChatMessageResponse from(ChatMessage message) {
         return new ChatMessageResponse(
-                chatMessage.getMessage()
+                message.getSender(),
+                message.getSkinTypes(),
+                message.getMessage()
         );
     }
 }

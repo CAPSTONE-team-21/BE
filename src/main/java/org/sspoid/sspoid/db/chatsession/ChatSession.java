@@ -31,7 +31,7 @@ public class ChatSession extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id") //, nullable = false
     private User user;
 
     @Column(name = "title")
@@ -44,4 +44,7 @@ public class ChatSession extends BaseEntity {
     @Column(name = "is_bookmark", nullable = false)
     private boolean isBookmark;
 
+    public void updateTitle(String title) {
+        this.title = title;
+    }
 }

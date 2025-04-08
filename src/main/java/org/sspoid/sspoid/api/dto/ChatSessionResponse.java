@@ -6,7 +6,6 @@ import org.sspoid.sspoid.db.chatsession.ChatSession;
 public record ChatSessionResponse (
     Long sessionId,
     String title,
-    //ChatSessionMode mode,
     boolean isBookmark
 ){
     public static ChatSessionResponse from(ChatSession chatSession) {
