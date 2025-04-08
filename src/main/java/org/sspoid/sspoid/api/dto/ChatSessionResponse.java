@@ -1,6 +1,5 @@
 package org.sspoid.sspoid.api.dto;
 
-import org.sspoid.sspoid.db.chatmassage.ChatMessage;
 import org.sspoid.sspoid.db.chatsession.ChatSession;
 
 public record ChatSessionResponse (
