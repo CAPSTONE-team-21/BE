@@ -4,8 +4,7 @@ import org.sspoid.sspoid.db.chatsession.SkinType;
 
 import java.util.List;
 
-public record ChatMessageSendRequest(
-        Long chatSessionId,
+public record ChatMessageRequest(
         String message,
         List<SkinType> skinTypes
 ) {}
