@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.sspoid.sspoid.api.dto.ChatMessageRequest;
 import org.sspoid.sspoid.api.dto.ChatMessageResponse;
-import org.sspoid.sspoid.api.dto.ChatMessageSendResponse;
 import org.sspoid.sspoid.api.dto.ChatSessionResponse;
 import org.sspoid.sspoid.api.service.ChatBotService;
+import org.sspoid.sspoid.db.chatmassage.ChatMessage;
 
 import java.util.List;
 import java.util.Map;
@@ -38,14 +39,19 @@ public class ChatBotController {
         return ResponseEntity.ok(chatBotService.updateTitle(id, newTitle));
     }
 
+    //3. 메세지 전송
+    @PostMapping("/api/chat/messages")
+    private ResponseEntity<List<ChatMessageResponse>> sendMessage(@RequestBody ChatMessageRequest message) {
+        return ResponseEntity.ok(chatBotService.sendMessage(message));
+    }
 
-    // 3. 세션 메시지 리스트 조회
+    // 4. 특정 세션에 저장되어있는 메시지 리스트 조회
     @GetMapping("/api/chat/sessions/{id}/messages")
     private ResponseEntity<List<ChatMessageResponse>> getMessage(@PathVariable Long id) {
         return ResponseEntity.ok(chatBotService.getMessagesBySessionId(id));
     }
 
-    // 4. 세션 목록 조회 (필터 가능)
+    // 5. 세션 목록 조회 (필터 가능)
     @GetMapping("/api/chat/sessions")
     private ResponseEntity<List<ChatSessionResponse>> getSessions() {
         return ResponseEntity.ok(chatBotService.getSessions());
