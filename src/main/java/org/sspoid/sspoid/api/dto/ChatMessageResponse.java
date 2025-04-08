@@ -4,17 +4,15 @@ import org.sspoid.sspoid.db.chatmassage.ChatMessage;
 import org.sspoid.sspoid.db.chatmassage.SenderType;
 import org.sspoid.sspoid.db.chatsession.SkinType;
 
-import java.util.List;
-
-public record ChatMessageResponse (
+public record ChatMessageResponse(
         SenderType sender,
-        List<SkinType> skinTypes,
+        SkinType skinType,
         String message
-){
-    public static ChatMessageResponse from(ChatMessage message) {
+) {
+    public static ChatMessageResponse from(ChatMessage message, SkinType skinType) {
         return new ChatMessageResponse(
                 message.getSender(),
-                message.getSkinTypes(),
+                skinType,
                 message.getMessage()
         );
     }
