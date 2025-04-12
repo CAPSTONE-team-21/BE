@@ -1,9 +1,9 @@
 spring:
-  datasource:
-    url: ${RDS_HOST} # 추후 setting에 설정해야함
-    username: ${RDS_USERNAME}
-    password: ${RDS_PASSWORD}
-    driverClassName: com.mysql.cj.jdbc.Driver
+#  datasource:
+#    url: ${RDS_HOST} # 추후 setting에 설정해야함
+#    username: ${RDS_USERNAME}
+#    password: ${RDS_PASSWORD}
+#    driverClassName: com.mysql.cj.jdbc.Driver
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
