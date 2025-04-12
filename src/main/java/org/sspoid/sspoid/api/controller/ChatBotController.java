@@ -41,7 +41,7 @@ public class ChatBotController {
 
     //3. 메세지 전송
     @PostMapping("/api/chat/{id}/messages")
-    private ResponseEntity<List<ChatMessageResponse>> sendMessage(
+    public ResponseEntity<List<ChatMessageResponse>> sendMessage(
             @PathVariable Long id,
             @RequestBody ChatMessageRequest message
     ) {
@@ -50,19 +50,19 @@ public class ChatBotController {
 
     // 4. 특정 세션에 저장되어있는 메시지 리스트 조회
     @GetMapping("/api/chat/sessions/{id}/messages")
-    private ResponseEntity<List<ChatMessageResponse>> getMessage(@PathVariable Long id) {
+    public ResponseEntity<List<ChatMessageResponse>> getMessage(@PathVariable Long id) {
         return ResponseEntity.ok(chatBotService.getMessagesBySessionId(id));
     }
 
     // 5. 세션 목록 조회 (필터 가능)
     @GetMapping("/api/chat/sessions")
-    private ResponseEntity<List<ChatSessionResponse>> getSessions() {
+    public ResponseEntity<List<ChatSessionResponse>> getSessions() {
         return ResponseEntity.ok(chatBotService.getSessions());
     }
 
 //    // 5. 대화 요약
 //    @PostMapping("/api/chat/sessions/{id}/summary")
-//    private ResponseEntity<ChatSummaryResponse> getSummary(@PathVariable Long SessionId) {
+//    public ResponseEntity<ChatSummaryResponse> getSummary(@PathVariable Long SessionId) {
 //        return ResponseEntity.ok(chatBotService.getSummary());
 //    }
 }
