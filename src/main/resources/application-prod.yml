@@ -1,9 +1,9 @@
 spring:
-#  datasource:
-#    url: ${RDS_HOST} # 추후 setting에 설정해야함
-#    username: ${RDS_USERNAME}
-#    password: ${RDS_PASSWORD}
-#    driverClassName: com.mysql.cj.jdbc.Driver
+  datasource:
+    url: jdbc:mysql://sspoid-rds.cn24k4e0mw5n.ap-northeast-2.rds.amazonaws.com:3306/sspoid
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
+    driverClassName: com.mysql.cj.jdbc.Driver
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
