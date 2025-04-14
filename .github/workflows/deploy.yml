@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - 16-chore-cicd-파이프라인-설정
 
 jobs:
   build-and-deploy:
