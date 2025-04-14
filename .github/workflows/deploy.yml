@@ -16,7 +16,7 @@ jobs:
 
     env:
       PROJECT_NAME: sspoid
-      DEPLOY_DIR: /home/ubuntu/sspoid
+      DEPLOY_DIR: /home/ec2-user/sspoid
       JAR_NAME: sspoid.jar
 
     steps:
@@ -43,17 +43,17 @@ jobs:
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_IP }}
-          username: ubuntu
+          username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "build/libs/${{ env.JAR_NAME }}"
-          target: "${{ env.DEPLOY_DIR }}"
+          source: "build/libs/*.jar"
+          target: "/home/ec2-user/sspoid"
           overwrite: true
 
       - name: Run JAR on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_IP }}
-          username: ubuntu
+          username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             PID=$(sudo lsof -t -i :8080 || echo "")
@@ -68,4 +68,4 @@ jobs:
               -DRDS_HOST='${{ secrets.RDS_HOST }}' \
               -DRDS_USERNAME='${{ secrets.RDS_USERNAME }}' \
               -DRDS_PASSWORD='${{ secrets.RDS_PASSWORD }}' \
-              ${{ env.DEPLOY_DIR }}/${{ env.JAR_NAME }} > /home/ubuntu/${{ env.PROJECT_NAME }}.log 2>&1 &
+              /home/ec2-user/sspoid/*.jar > /home/ec2-user/application.log 2>&1 &
