@@ -3,7 +3,7 @@ name: CI/CD workflow
 on:
   push:
     branches:
-      - main #main 브랜치에
+      - main #main 브랜치에 push 될 때 마다
 
 jobs:
   build-and-deploy:
