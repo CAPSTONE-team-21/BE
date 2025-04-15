@@ -12,6 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/api/**")
                 .allowedOriginPatterns(
                         "https://sspoid.site",
+                        "https://www.sspoid.site",
                         "http://localhost:3000", //배포환경에서 추후 삭제
                         "http://localhost:5173" //배포환경에서 추후 삭제
                         )
