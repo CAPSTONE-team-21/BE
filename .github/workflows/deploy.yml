@@ -45,7 +45,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "build/libs/sspoid-0.0.1-SNAPSHOT.jar"
-          target: "/home/ec2-user/sspoid/sspoid.jar"
+          target: "/home/ec2-user/sspoid"
           overwrite: true
 
       - name: Run JAR on EC2
