@@ -44,8 +44,8 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "build/libs/*.jar"
-          target: "/home/ec2-user/sspoid"
+          source: "build/libs/sspoid-0.0.1-SNAPSHOT.jar"
+          target: "/home/ec2-user/sspoid/sspoid.jar"
           overwrite: true
 
       - name: Run JAR on EC2
@@ -67,4 +67,4 @@ jobs:
               -DRDS_HOST='${{ secrets.RDS_HOST }}' \
               -DRDS_USERNAME='${{ secrets.RDS_USERNAME }}' \
               -DRDS_PASSWORD='${{ secrets.RDS_PASSWORD }}' \
-              /home/ec2-user/sspoid/*.jar > /home/ec2-user/application.log 2>&1 &
+              /home/ec2-user/sspoid/sspoid.jar > /home/ec2-user/application.log 2>&1 &
