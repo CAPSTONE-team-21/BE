@@ -2,6 +2,7 @@ package org.sspoid.sspoid.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,22 +24,6 @@ public class ChatBotController {
 
     private final ChatBotService chatBotService;
 
-    // 1. 세션 생성
-    @PostMapping("/api/chat/sessions")
-    public ResponseEntity<ChatSessionResponse> createSessions() {
-        return ResponseEntity.ok(chatBotService.createSession());
-    }
-
-    //2. 세션 제목 수정
-    @PatchMapping("/api/chat/sessions/{id}/title")
-    public ResponseEntity<ChatSessionResponse> updateSessionTitle(
-            @PathVariable Long id,
-            @RequestBody Map<String, String> request
-    ) {
-        String newTitle = request.get("title");
-        return ResponseEntity.ok(chatBotService.updateTitle(id, newTitle));
-    }
-
     //3. 메세지 전송
     @PostMapping("/api/chat/{id}/messages")
     public ResponseEntity<List<ChatMessageResponse>> sendMessage(
@@ -54,11 +39,6 @@ public class ChatBotController {
         return ResponseEntity.ok(chatBotService.getMessagesBySessionId(id));
     }
 
-    // 5. 세션 목록 조회 (필터 가능)
-    @GetMapping("/api/chat/sessions")
-    public ResponseEntity<List<ChatSessionResponse>> getSessions() {
-        return ResponseEntity.ok(chatBotService.getSessions());
-    }
 
 //    // 5. 대화 요약
 //    @PostMapping("/api/chat/sessions/{id}/summary")
