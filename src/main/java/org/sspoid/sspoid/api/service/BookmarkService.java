@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.sspoid.sspoid.api.dto.ChatSessionResponse;
 import org.sspoid.sspoid.db.chatsession.ChatSession;
 import org.sspoid.sspoid.db.chatsession.ChatSessionRepository;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -29,4 +32,11 @@ public class BookmarkService {
         session.setBookmark(false);
     }
 
+    @Transactional
+    public List<ChatSessionResponse> getBookmarks() {
+        List<ChatSession> sessions = chatSessionRepository.findByIsBookmarkTrue();
+        return sessions.stream()
+                .map(ChatSessionResponse::from)
+                .toList();
+    }
 }
