@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 @Slf4j
@@ -44,6 +45,7 @@ public class ChatBotService {
                 .isBookmark(false)
                 .build();
         chatSessionRepository.save(chatSession);
+        log.info("새로운 세션 생성 완료 - Session ID: {}", chatSession.getId());
         return ChatSessionResponse.from(chatSession);
 
     }
@@ -52,14 +54,32 @@ public class ChatBotService {
     @Transactional
     public ChatSessionResponse updateTitle(Long id, String newTitle) {
         ChatSession session = chatSessionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Session not found"));
+                .orElseThrow(() -> {
+                    log.error("세션 제목 수정 실패 - 존재하지 않는 Session ID: {}", id);
+                    return new RuntimeException("Session not found");
+                });
         session.updateTitle(newTitle);
+
+        log.info("세션 제목 수정 완료 - Session ID: {}, New Title: {}", id, newTitle);
         return ChatSessionResponse.from(session);
+    }
+
+    @Transactional
+    public void deleteSession(Long id) {
+        ChatSession session = chatSessionRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("세션 삭제 실패 - 존재하지 않는 Session ID: {}", id);
+                    return new RuntimeException("Session not found");
+                });
+        chatSessionRepository.delete(session);
+        log.info("세션 삭제 완료 - Session ID: {}", id);
     }
 
     // 3. 전체 세션 리스트 조회
     public List<ChatSessionResponse> getSessions() {
         List<ChatSession> sessions = chatSessionRepository.findAll();
+        log.info("전체 세션 조회 완료 - 조회된 세션 수: {}", sessions.size());
+
         return sessions.stream()
                 .map(ChatSessionResponse::from)
                 .toList();
@@ -80,6 +100,8 @@ public class ChatBotService {
                 .message(request.message())
                 .build();
         chatMessageRepository.save(userMessage);
+        log.info("사용자 메시지 저장 완료 - Session ID: {}, Message: {}", id, request.message());
+
 
         // 2. 각 skinType 별로 AI 응답 생성 + 저장 + DTO 매핑
         List<ChatMessageResponse> botResponses = skinTypes.stream().map(skinType -> {
@@ -95,6 +117,9 @@ public class ChatBotService {
                     .build();
             chatMessageRepository.save(aiMessage);
 
+            log.info("BOT 응답 저장 완료 - Session ID: {}, SkinType: {}, Response Length: {}", id, skinType, aiResponse.length());
+
+
             // DTO로 매핑
             return new ChatMessageResponse(
                     SenderType.BOT,
@@ -109,6 +134,8 @@ public class ChatBotService {
     // 5. 특정 세션에 저장되어있는 메시지 리스트 조회
     public List<ChatMessageResponse> getMessagesBySessionId(Long id) {
         List<ChatMessage> messages = chatMessageRepository.findByChatSessionId(id);
+
+        log.info("세션 메시지 조회 완료 - Session ID: {}, 메시지 수: {}", id, messages.size());
 
         return messages.stream()
                 .flatMap(message -> message.getSkinTypes().stream()
