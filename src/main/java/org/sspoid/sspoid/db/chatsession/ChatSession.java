@@ -47,4 +47,8 @@ public class ChatSession extends BaseEntity {
     public void updateTitle(String title) {
         this.title = title;
     }
+
+    public void setBookmark(boolean isBookmark) {
+        this.isBookmark = isBookmark;
+    }
 }
