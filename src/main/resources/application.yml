@@ -10,3 +10,7 @@ server:
 spring:
   profiles:
     active: prod
+
+kakao:
+  api-key: ${API_KEY} # 암호화 필요
+  redirect-uri: http://localhost:8080/api/login/kakao

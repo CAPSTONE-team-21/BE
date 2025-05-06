@@ -28,11 +28,23 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	//valid
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 	// WebSocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
 	//swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+
+	//Webflux
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// login
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+	implementation 'org.springframework.boot:spring-boot-starter-mail' //이메일 인증
 
 }
 
