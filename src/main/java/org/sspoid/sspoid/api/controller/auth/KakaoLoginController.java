@@ -18,7 +18,7 @@ public class KakaoLoginController {
 
     private final KakaoLoginService kakaoLoginService;
 
-    @PostMapping("/api/login/kakao")
+    @PostMapping("/api/auth/login/kakao")
     public ResponseEntity<?> callback(@Valid @RequestBody KakaoLoginRequest request) {
         String accessToken = kakaoLoginService.getAccessToken(request.code());
         KakaoUserInfoResponse userInfo = kakaoLoginService.getUserInfo(accessToken);
