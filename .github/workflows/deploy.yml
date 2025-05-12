@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - 23-feat-자체-로그인-및-회원정보-db-저장
 
 jobs:
   build-and-deploy:
@@ -67,4 +68,6 @@ jobs:
               -DRDS_HOST='${{ secrets.RDS_HOST }}' \
               -DRDS_USERNAME='${{ secrets.RDS_USERNAME }}' \
               -DRDS_PASSWORD='${{ secrets.RDS_PASSWORD }}' \
+              -DAPI_KEY='${{ secrets.API_KEY }}' \
+
               /home/ec2-user/sspoid/build/libs/sspoid-0.0.1-SNAPSHOT.jar > /home/ec2-user/application.log 2>&1 &
