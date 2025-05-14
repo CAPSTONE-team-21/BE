@@ -18,13 +18,13 @@ import org.sspoid.sspoid.api.service.auth.EmailService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api")
 public class AuthController {
 
     private final AuthService authService;
     private final EmailService emailService;
 
-    @PostMapping("/sign-up")
+    @PostMapping("/signup")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequest request) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(authService.signUp(request));
