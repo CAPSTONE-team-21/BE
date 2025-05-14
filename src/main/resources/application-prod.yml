@@ -25,3 +25,7 @@ springdoc:
 #model:
 #  api:
 #    url: http://localhost:5000/api/generate //??
+
+logging:
+  level:
+    com.zaxxer.hikari: DEBUG
