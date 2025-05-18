@@ -22,10 +22,6 @@ springdoc:
     enabled: true
     path: /v3/api-docs       # 내부적으로 API 명세를 제공하는 경로
 
-#model:
-#  api:
-#    url: http://localhost:5000/api/generate //??
-
 logging:
   level:
     com.zaxxer.hikari: DEBUG
