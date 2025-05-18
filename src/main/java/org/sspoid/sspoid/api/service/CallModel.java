@@ -27,6 +27,8 @@ public class CallModel {
         return "🤖 " + dummyResponses.get(new Random().nextInt(dummyResponses.size()));
     }
 
+    //public String generateSummary(String conversation) {}
+
 //    @Value("${model.api.url}")
 //    private String modelApiUrl;
 //
