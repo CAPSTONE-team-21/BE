@@ -40,7 +40,6 @@ public class ChatBotController {
         return ResponseEntity.ok(chatBotService.getMessagesBySessionId(id));
     }
 
-
     // 5. 대화 요약
     @PostMapping("/api/chat/sessions/{id}/summary")
     public ResponseEntity<ChatSummaryResponse> getSummary(@PathVariable Long id) {
