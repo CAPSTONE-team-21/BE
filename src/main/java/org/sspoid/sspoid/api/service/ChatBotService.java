@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.sspoid.sspoid.api.dto.ChatMessageRequest;
 import org.sspoid.sspoid.api.dto.ChatMessageResponse;
 import org.sspoid.sspoid.api.dto.ChatSessionResponse;
+import org.sspoid.sspoid.api.dto.ChatSummaryResponse;
 import org.sspoid.sspoid.db.chatmassage.ChatMessage;
 import org.sspoid.sspoid.db.chatmassage.ChatMessageRepository;
 import org.sspoid.sspoid.db.chatmassage.SenderType;
@@ -15,9 +16,11 @@ import org.sspoid.sspoid.db.chatsession.ChatSessionRepository;
 import org.sspoid.sspoid.db.chatsession.SkinType;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
@@ -144,16 +147,25 @@ public class ChatBotService {
     }
 
     // 6. 요약 생성
-//    @Transactional
-//    public ChatSummaryResponse getSummary(Long sessionId) {
-//        ChatSession session = chatSessionRepository.findById(sessionId)
-//                .orElseThrow(() -> new IllegalArgumentException("Session not found"));
-//
-//        List<ChatMessage> messages = chatMessageRepository.findByChatSession_Id(sessionId);
-//
-//        String summary = "임시 요약 메세지";
-//
-//        return new ChatSummaryResponse(sessionId, summary); // 추후 수정
-//    }
+    @Transactional
+    public ChatSummaryResponse getSummary(Long sessionId) {
+        ChatSession session = chatSessionRepository.findById(sessionId)
+                .orElseThrow(() -> new IllegalArgumentException("Session not found"));
 
+        log.info("올바른 세션 형식입니다! Session ID: {}", sessionId);
+
+        List<ChatMessage> messages = chatMessageRepository.findByChatSessionId(sessionId);
+
+        String conversation = messages.stream()
+                .sorted(Comparator.comparing(ChatMessage:: getCreatedAt))
+                .map(msg -> msg.getSender().name() + ": " + msg.getMessage())
+                .collect(Collectors.joining("\n"));
+
+        log.info("📄 conversation: " + conversation);
+
+        String summary = "세션 " + sessionId + "의 임시 요약 메세지";
+        //String summary = callModel.generateSummary(conversation);
+
+        return new ChatSummaryResponse(summary);
+    }
 }
