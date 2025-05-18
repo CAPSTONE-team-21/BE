@@ -1,4 +1,4 @@
-package org.sspoid.sspoid.api.dto;
+package org.sspoid.sspoid.api.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 
