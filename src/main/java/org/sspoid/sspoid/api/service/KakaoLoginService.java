@@ -6,8 +6,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.sspoid.sspoid.api.dto.KakaoUserInfoResponse;
-import org.sspoid.sspoid.api.dto.KakoTokenResponse;
+import org.sspoid.sspoid.api.dto.auth.KakaoUserInfoResponse;
+import org.sspoid.sspoid.api.dto.auth.KakoTokenResponse;
 import org.sspoid.sspoid.common.config.KakaoConfig;
 import reactor.core.publisher.Mono;
 

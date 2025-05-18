@@ -17,13 +17,8 @@ import org.sspoid.sspoid.db.chatsession.SkinType;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 @Slf4j
@@ -38,7 +33,7 @@ public class ChatBotService {
     private final ChatMessageRepository chatMessageRepository;
 
     private final ChatPromptBuilder promptBuilder;
-    private final CallModel callModel;
+    private final CallApiService callApiService;
 
     // 1. 세션 생성
     @Transactional
@@ -109,7 +104,7 @@ public class ChatBotService {
         // 2. 각 skinType 별로 AI 응답 생성 + 저장 + DTO 매핑
         List<ChatMessageResponse> botResponses = skinTypes.stream().map(skinType -> {
             String prompt = promptBuilder.buildPrompt(request.message(), skinType);
-            String aiResponse = callModel.generateResponse(prompt);
+            String aiResponse = callApiService.callChatModelApi(prompt, skinType);
 
             // BOT 메시지 저장 - skinType은 단일로만 저장
             ChatMessage aiMessage = ChatMessage.builder()
@@ -121,7 +116,6 @@ public class ChatBotService {
             chatMessageRepository.save(aiMessage);
 
             log.info("BOT 응답 저장 완료 - Session ID: {}, SkinType: {}, Response Length: {}", id, skinType, aiResponse.length());
-
 
             // DTO로 매핑
             return new ChatMessageResponse(

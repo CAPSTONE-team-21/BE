@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.sspoid.sspoid.api.dto.KakaoLoginRequest;
-import org.sspoid.sspoid.api.dto.KakaoUserInfoResponse;
+import org.sspoid.sspoid.api.dto.auth.KakaoLoginRequest;
+import org.sspoid.sspoid.api.dto.auth.KakaoUserInfoResponse;
 import org.sspoid.sspoid.api.service.KakaoLoginService;
 
 @Slf4j
