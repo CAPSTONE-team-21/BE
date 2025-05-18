@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.sspoid.sspoid.api.dto.ChatMessageRequest;
 import org.sspoid.sspoid.api.dto.ChatMessageResponse;
 import org.sspoid.sspoid.api.dto.ChatSessionResponse;
+import org.sspoid.sspoid.api.dto.ChatSummaryResponse;
 import org.sspoid.sspoid.api.service.ChatBotService;
 import org.sspoid.sspoid.db.chatmassage.ChatMessage;
 
@@ -40,10 +41,10 @@ public class ChatBotController {
     }
 
 
-//    // 5. 대화 요약
-//    @PostMapping("/api/chat/sessions/{id}/summary")
-//    public ResponseEntity<ChatSummaryResponse> getSummary(@PathVariable Long SessionId) {
-//        return ResponseEntity.ok(chatBotService.getSummary());
-//    }
+    // 5. 대화 요약
+    @PostMapping("/api/chat/sessions/{id}/summary")
+    public ResponseEntity<ChatSummaryResponse> getSummary(@PathVariable Long id) {
+        return ResponseEntity.ok(chatBotService.getSummary(id));
+    }
 }
 
