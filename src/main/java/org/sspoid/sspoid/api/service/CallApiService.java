@@ -29,10 +29,10 @@ public class CallApiService {
 
     public CallApiService() {
         HttpClient httpClient = HttpClient.create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 100000) // 연결 시도 타임아웃: 10초
-                .responseTimeout(Duration.ofSeconds(300))             // 응답 수신 타임아웃: 30초
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 60000) // 연결 시도 타임아웃: 1분
+                .responseTimeout(Duration.ofSeconds(600))             // 응답 수신 타임아웃: 10분
                 .doOnConnected(conn -> conn
-                        .addHandlerLast(new ReadTimeoutHandler(30, TimeUnit.SECONDS))   // 읽기 타임아웃
+                        .addHandlerLast(new ReadTimeoutHandler(300, TimeUnit.SECONDS))   // 읽기 타임아웃
                         .addHandlerLast(new WriteTimeoutHandler(30, TimeUnit.SECONDS))  // 쓰기 타임아웃
                 );
 
