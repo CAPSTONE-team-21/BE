@@ -13,7 +13,7 @@ import org.sspoid.sspoid.db.chatmassage.ChatMessageRepository;
 import org.sspoid.sspoid.db.chatmassage.SenderType;
 import org.sspoid.sspoid.db.chatsession.ChatSession;
 import org.sspoid.sspoid.db.chatsession.ChatSessionRepository;
-import org.sspoid.sspoid.db.chatsession.SkinType;
+import org.sspoid.sspoid.db.chatsession.SkinGroup;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class ChatBotService {
 
     private static final String DEFAULT_SESSION_TITLE = "제목 없음";
-    private static final List<SkinType> DEFAULT_SKIN_TYPES = Arrays.asList(SkinType.values());
+    private static final List<SkinGroup> DEFAULT_SKIN_TYPES = Arrays.asList(SkinGroup.values());
 
     private final ChatSessionRepository chatSessionRepository;
     private final ChatMessageRepository chatMessageRepository;
@@ -87,14 +87,14 @@ public class ChatBotService {
     @Transactional
     public List<ChatMessageResponse> sendMessage(Long id, ChatMessageRequest request) {
 
-        List<SkinType> skinTypes = (request.skinTypes() == null || request.skinTypes().isEmpty())
-                ? DEFAULT_SKIN_TYPES : request.skinTypes();
+        List<SkinGroup> skinGroups = (request.skinGroups() == null || request.skinGroups().isEmpty())
+                ? DEFAULT_SKIN_TYPES : request.skinGroups();
 
         //1. 메세지 전송
         ChatMessage userMessage = ChatMessage.builder()
                 .chatSessionId(id)
                 .sender(SenderType.USER)
-                .skinTypes(skinTypes)
+                .skinGroups(skinGroups)
                 .message(request.message())
                 .build();
         chatMessageRepository.save(userMessage);
@@ -102,7 +102,7 @@ public class ChatBotService {
 
 
         // 2. 각 skinType 별로 AI 응답 생성 + 저장 + DTO 매핑
-        List<ChatMessageResponse> botResponses = skinTypes.stream().map(skinType -> {
+        List<ChatMessageResponse> botResponses = skinGroups.stream().map(skinType -> {
             String prompt = promptBuilder.buildPrompt(request.message(), skinType);
             String aiResponse = callApiService.callChatModelApi(prompt, skinType);
 
@@ -110,7 +110,7 @@ public class ChatBotService {
             ChatMessage aiMessage = ChatMessage.builder()
                     .chatSessionId(id)
                     .sender(SenderType.BOT)
-                    .skinTypes(List.of(skinType)) // 단일 스킨타입만 저장
+                    .skinGroups(List.of(skinType)) // 단일 스킨타입만 저장
                     .message(aiResponse)
                     .build();
             chatMessageRepository.save(aiMessage);
@@ -135,7 +135,7 @@ public class ChatBotService {
         log.info("세션 메시지 조회 완료 - Session ID: {}, 메시지 수: {}", id, messages.size());
 
         return messages.stream()
-                .flatMap(message -> message.getSkinTypes().stream()
+                .flatMap(message -> message.getSkinGroups().stream()
                         .map(skinType -> ChatMessageResponse.from(message, skinType)))
                 .toList();
     }
