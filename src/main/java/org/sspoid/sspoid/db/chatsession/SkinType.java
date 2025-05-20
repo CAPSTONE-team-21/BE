@@ -1,6 +1,10 @@
 package org.sspoid.sspoid.db.chatsession;
 
-public enum SkinTpye {
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public enum SkinType {
     DRY1(SkinGroup.DRY),
     DRY2(SkinGroup.DRY),
     DRY3(SkinGroup.DRY),
@@ -18,9 +22,18 @@ public enum SkinTpye {
     SENSITIVE3(SkinGroup.SENSITIVE);
 
     private final SkinGroup skinGroup;
-
-    SkinTpye(SkinGroup skinGroup) {
+    SkinType(SkinGroup skinGroup) {
         this.skinGroup = skinGroup;
+    }
+
+    public SkinGroup getSkinGroup() {
+        return skinGroup;
+    }
+
+    public static List<SkinType> fromSkinGroup(SkinGroup skinGroup) {
+        return Arrays.stream(values())
+                .filter(sub -> sub.getSkinGroup() == skinGroup)
+                .collect(Collectors.toList());
     }
 
 }
