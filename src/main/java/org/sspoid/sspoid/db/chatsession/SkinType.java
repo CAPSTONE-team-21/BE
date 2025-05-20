@@ -9,9 +9,9 @@ public enum SkinType {
     DRY2(SkinGroup.DRY),
     DRY3(SkinGroup.DRY),
 
-    COMBINED1(SkinGroup.COMBINED),
-    COMBINED2(SkinGroup.COMBINED),
-    COMBINED3(SkinGroup.COMBINED),
+    COMBINATION1(SkinGroup.COMBINATION),
+    COMBINATION2(SkinGroup.COMBINATION),
+    COMBINATION3(SkinGroup.COMBINATION),
 
     OILY1(SkinGroup.OILY),
     OILY2(SkinGroup.OILY),

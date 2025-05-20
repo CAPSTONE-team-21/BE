@@ -2,7 +2,7 @@ package org.sspoid.sspoid.db.chatsession;
 
 public enum SkinGroup {
     DRY,
-    COMBINED,
+    COMBINATION,
     OILY,
     SENSITIVE,
 }
