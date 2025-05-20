@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.sspoid.sspoid.api.dto.model.ChatModelResponse;
 import org.sspoid.sspoid.api.dto.model.ModelPromptRequest;
-import org.sspoid.sspoid.db.chatsession.SkinType;
+import org.sspoid.sspoid.db.chatsession.SkinGroup;
 import reactor.netty.http.client.HttpClient;
 
 import java.nio.charset.StandardCharsets;
@@ -41,7 +41,7 @@ public class CallApiService {
                 .build();
     }
 
-    public String callChatModelApi(String message, SkinType skinGroup) {
+    public String callChatModelApi(String message, SkinGroup skinGroup) {
         try {
             ModelPromptRequest request = new ModelPromptRequest(message, skinGroup.name());
             System.out.println("🔍 Sending request to Model1 API: " + request.message());

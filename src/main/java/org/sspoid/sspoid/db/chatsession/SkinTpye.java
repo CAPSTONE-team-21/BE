@@ -1,25 +1,25 @@
 package org.sspoid.sspoid.db.chatsession;
 
 public enum SkinTpye {
-    DRY1(SkinType.DRY),
-    DRY2(SkinType.DRY),
-    DRY3(SkinType.DRY),
+    DRY1(SkinGroup.DRY),
+    DRY2(SkinGroup.DRY),
+    DRY3(SkinGroup.DRY),
 
-    COMBINED1(SkinType.COMBINED),
-    COMBINED2(SkinType.COMBINED),
-    COMBINED3(SkinType.COMBINED),
+    COMBINED1(SkinGroup.COMBINED),
+    COMBINED2(SkinGroup.COMBINED),
+    COMBINED3(SkinGroup.COMBINED),
 
-    OILY1(SkinType.OILY),
-    OILY2(SkinType.OILY),
-    OILY3(SkinType.OILY),
+    OILY1(SkinGroup.OILY),
+    OILY2(SkinGroup.OILY),
+    OILY3(SkinGroup.OILY),
 
-    SENSITIVE1(SkinType.SENSITIVE),
-    SENSITIVE2(SkinType.SENSITIVE),
-    SENSITIVE3(SkinType.SENSITIVE);
+    SENSITIVE1(SkinGroup.SENSITIVE),
+    SENSITIVE2(SkinGroup.SENSITIVE),
+    SENSITIVE3(SkinGroup.SENSITIVE);
 
-    private final SkinType skinGroup;
+    private final SkinGroup skinGroup;
 
-    SkinTpye(SkinType skinGroup) {
+    SkinTpye(SkinGroup skinGroup) {
         this.skinGroup = skinGroup;
     }
 
