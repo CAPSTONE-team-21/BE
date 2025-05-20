@@ -18,7 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.sspoid.sspoid.db.BaseEntity;
-import org.sspoid.sspoid.db.chatsession.SkinGroup;
+import org.sspoid.sspoid.db.chatsession.SkinType;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class ChatMessage extends BaseEntity {
             joinColumns = @JoinColumn(name = "chat_message_id")
     )
     @Enumerated(EnumType.STRING)
-    private List<SkinGroup> skinGroups;
+    private List<SkinType> skinTypes;
 
     @Lob
     @Column(name = "message", nullable = false, columnDefinition = "LONGTEXT")

@@ -14,6 +14,7 @@ import org.sspoid.sspoid.db.chatmassage.SenderType;
 import org.sspoid.sspoid.db.chatsession.ChatSession;
 import org.sspoid.sspoid.db.chatsession.ChatSessionRepository;
 import org.sspoid.sspoid.db.chatsession.SkinGroup;
+import org.sspoid.sspoid.db.chatsession.SkinType;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -90,11 +91,15 @@ public class ChatBotService {
         List<SkinGroup> skinGroups = (request.skinGroups() == null || request.skinGroups().isEmpty())
                 ? DEFAULT_SKIN_TYPES : request.skinGroups();
 
+        List<SkinType> skinTypes = skinGroups.stream()
+                .flatMap(group -> SkinType.fromSkinGroup(group).stream())
+                .collect(Collectors.toList());
+
         //1. 메세지 전송
         ChatMessage userMessage = ChatMessage.builder()
                 .chatSessionId(id)
                 .sender(SenderType.USER)
-                .skinGroups(skinGroups)
+                .skinTypes(skinTypes)
                 .message(request.message())
                 .build();
         chatMessageRepository.save(userMessage);
@@ -102,17 +107,18 @@ public class ChatBotService {
 
 
         // 2. 각 skinType 별로 AI 응답 생성 + 저장 + DTO 매핑
-        List<ChatMessageResponse> botResponses = skinGroups.stream().map(skinType -> {
-            String prompt = promptBuilder.buildPrompt(request.message(), skinType);
-            String aiResponse = callApiService.callChatModelApi(prompt, skinType);
+        List<ChatMessageResponse> botResponses = skinTypes.stream().map(skinType -> {
+            String prompt = promptBuilder.buildPrompt(request.message(), skinType.getSkinGroup());
+            String aiResponse = callApiService.callChatModelApi(prompt, skinType.getSkinGroup());
 
             // BOT 메시지 저장 - skinType은 단일로만 저장
             ChatMessage aiMessage = ChatMessage.builder()
                     .chatSessionId(id)
                     .sender(SenderType.BOT)
-                    .skinGroups(List.of(skinType)) // 단일 스킨타입만 저장
+                    .skinTypes(List.of(skinType)) // 단일 스킨타입만 저장
                     .message(aiResponse)
                     .build();
+
             chatMessageRepository.save(aiMessage);
 
             log.info("BOT 응답 저장 완료 - Session ID: {}, SkinType: {}, Response Length: {}", id, skinType, aiResponse.length());
@@ -135,7 +141,7 @@ public class ChatBotService {
         log.info("세션 메시지 조회 완료 - Session ID: {}, 메시지 수: {}", id, messages.size());
 
         return messages.stream()
-                .flatMap(message -> message.getSkinGroups().stream()
+                .flatMap(message -> message.getSkinTypes().stream()
                         .map(skinType -> ChatMessageResponse.from(message, skinType)))
                 .toList();
     }
