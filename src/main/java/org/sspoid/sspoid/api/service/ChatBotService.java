@@ -13,7 +13,7 @@ import org.sspoid.sspoid.db.chatmassage.ChatMessageRepository;
 import org.sspoid.sspoid.db.chatmassage.SenderType;
 import org.sspoid.sspoid.db.chatsession.ChatSession;
 import org.sspoid.sspoid.db.chatsession.ChatSessionRepository;
-import org.sspoid.sspoid.db.chatsession.SkinGroup;
+import org.sspoid.sspoid.db.chatsession.SkinType;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class ChatBotService {
 
     private static final String DEFAULT_SESSION_TITLE = "제목 없음";
-    private static final List<SkinGroup> DEFAULT_SKIN_TYPES = Arrays.asList(SkinGroup.values());
+    private static final List<SkinType> DEFAULT_SKIN_TYPES = Arrays.asList(SkinType.values());
 
     private final ChatSessionRepository chatSessionRepository;
     private final ChatMessageRepository chatMessageRepository;
@@ -87,7 +87,7 @@ public class ChatBotService {
     @Transactional
     public List<ChatMessageResponse> sendMessage(Long id, ChatMessageRequest request) {
 
-        List<SkinGroup> skinGroups = (request.skinGroups() == null || request.skinGroups().isEmpty())
+        List<SkinType> skinGroups = (request.skinGroups() == null || request.skinGroups().isEmpty())
                 ? DEFAULT_SKIN_TYPES : request.skinGroups();
 
         //1. 메세지 전송

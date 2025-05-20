@@ -1,6 +1,6 @@
 package org.sspoid.sspoid.db.chatsession;
 
-public enum SkinGroup {
+public enum SkinType {
     DRY,
     COMBINED,
     OILY,
