@@ -25,7 +25,7 @@ spring:
 
 kakao:
   api-key: ${API_KEY} # 암호화 필요
-  redirect-uri: http:/localhost:8080/api/login/kakao
+  redirect-uri: https://sspoid.site/login/kakao
 
 jwt:
   secret: ${JWT_SECRET}
