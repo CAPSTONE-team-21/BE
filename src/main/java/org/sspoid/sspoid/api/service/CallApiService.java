@@ -44,7 +44,7 @@ public class CallApiService {
     public String callChatModelApi(String message, SkinGroup skinGroup) {
         try {
             ModelPromptRequest request = new ModelPromptRequest(message, skinGroup.name());
-            System.out.println("🔍 Sending request to Model1 API: " + request.message());
+            System.out.println("📤 [모델 요청] SkinGroup: " + skinGroup.name() + " | Message: " + message);
 
             ChatModelResponse response = webClient.post()
                     .uri(ChatModel_URL)
@@ -55,16 +55,23 @@ public class CallApiService {
                     .onStatus(
                             status -> status.is4xxClientError() || status.is5xxServerError(),  // ✅ 직접 람다로 체크
                             clientResponse -> clientResponse.bodyToMono(String.class).map(errorBody -> {
-                                System.err.println("❌ 모델 API 응답 오류 바디: " + errorBody);
+                                System.err.println("❌ [모델 응답 오류] Status: " + clientResponse.statusCode() + " | Body: " + errorBody);
                                 return new RuntimeException("모델 응답 오류: " + errorBody);
                             })
                     )
                     .bodyToMono(ChatModelResponse.class)
+                    .doOnNext(res -> System.out.println("📥 [모델 응답 수신 완료] 응답 메시지 길이: " + res.message().length()))
                     .block();
+
+            if (response == null || response.message() == null) {
+                System.err.println("⚠️ [모델 응답 없음 또는 null] message=null");
+                throw new RuntimeException("모델 응답이 null입니다");
+            }
 
             return response.message();
         }
         catch (Exception e) {
+            System.err.println("🔥 [모델 API 호출 실패] 에러: " + e.getMessage());
             throw new RuntimeException("Failed to call ChatModelApi", e);
         }
     }

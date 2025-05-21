@@ -95,6 +95,8 @@ public class ChatBotService {
                 .flatMap(group -> SkinType.fromSkinGroup(group).stream())
                 .collect(Collectors.toList());
 
+        log.info("🤍 스킨 타입: {}", skinTypes);
+
         //1. 메세지 전송
         ChatMessage userMessage = ChatMessage.builder()
                 .chatSessionId(id)
@@ -109,6 +111,8 @@ public class ChatBotService {
         // 2. 각 skinType 별로 AI 응답 생성 + 저장 + DTO 매핑
         List<ChatMessageResponse> botResponses = skinTypes.stream().map(skinType -> {
             String prompt = promptBuilder.buildPrompt(request.message(), skinType.getSkinGroup());
+            log.info("🔍 Sending request to Model API - SkinType: {}, Prompt: {}", skinType, prompt);
+
             String aiResponse = callApiService.callChatModelApi(prompt, skinType.getSkinGroup());
 
             // BOT 메시지 저장 - skinType은 단일로만 저장
