@@ -37,7 +37,7 @@ public class ChatMessage extends BaseEntity {
     @Column(name = "chat_session_id", nullable = false)
     private Long chatSessionId;
 
-    @Column(length = 30)
+    @Column(length = 50)
     @Enumerated(EnumType.STRING)
     private SenderType sender;
 
