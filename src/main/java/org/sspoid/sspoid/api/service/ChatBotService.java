@@ -88,8 +88,8 @@ public class ChatBotService {
     @Transactional
     public List<ChatMessageResponse> sendMessage(Long id, ChatMessageRequest request) {
 
-        List<SkinGroup> skinGroups = (request.skinGroups() == null || request.skinGroups().isEmpty())
-                ? DEFAULT_SKIN_TYPES : request.skinGroups();
+        List<SkinGroup> skinGroups = (request.skinTypes() == null || request.skinTypes().isEmpty())
+                ? DEFAULT_SKIN_TYPES : request.skinTypes();
 
         List<SkinType> skinTypes = skinGroups.stream()
                 .flatMap(group -> SkinType.fromSkinGroup(group).stream())

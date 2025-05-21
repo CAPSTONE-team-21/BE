@@ -6,5 +6,5 @@ import java.util.List;
 
 public record ChatMessageRequest(
         String message,
-        List<SkinGroup> skinGroups
+        List<SkinGroup> skinTypes
 ) {}
