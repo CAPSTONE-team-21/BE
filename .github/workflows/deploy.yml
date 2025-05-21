@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - 8-feat-ai-연동
 
 jobs:
   build-and-deploy:

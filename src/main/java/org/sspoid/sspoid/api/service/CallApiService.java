@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.sspoid.sspoid.api.dto.model.ChatModelResponse;
 import org.sspoid.sspoid.api.dto.model.ModelPromptRequest;
 import org.sspoid.sspoid.db.chatsession.SkinGroup;
+import org.sspoid.sspoid.db.chatsession.SkinType;
 import reactor.netty.http.client.HttpClient;
 
 import java.nio.charset.StandardCharsets;
@@ -41,10 +42,10 @@ public class CallApiService {
                 .build();
     }
 
-    public String callChatModelApi(String message, SkinGroup skinGroup) {
+    public String callChatModelApi(String message, SkinType skinType) {
         try {
-            ModelPromptRequest request = new ModelPromptRequest(message, skinGroup.name());
-            System.out.println("📤 [모델 요청] SkinGroup: " + skinGroup.name() + " | Message: " + message);
+            ModelPromptRequest request = new ModelPromptRequest(message, skinType.name());
+            System.out.println("📤 [모델 요청] SkinGroup: " + skinType.name() + " | Message: " + message);
 
             ChatModelResponse response = webClient.post()
                     .uri(ChatModel_URL)
