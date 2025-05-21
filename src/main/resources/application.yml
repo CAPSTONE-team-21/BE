@@ -34,4 +34,5 @@ jwt:
 
 model:
   api:
-    url: ${MODEL1_API}
+    model1-url: ${MODEL1_API}
+    model2-url: ${MODEL2_API}
