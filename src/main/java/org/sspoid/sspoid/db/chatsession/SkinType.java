@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public enum SkinType {
-    DRY(SkinGroup.DRY),
+    DRY1(SkinGroup.DRY),
     //DRY2(SkinGroup.DRY),
     //DRY3(SkinGroup.DRY),
 
