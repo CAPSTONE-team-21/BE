@@ -13,6 +13,7 @@ import org.sspoid.sspoid.db.chatmassage.ChatMessageRepository;
 import org.sspoid.sspoid.db.chatmassage.SenderType;
 import org.sspoid.sspoid.db.chatsession.ChatSession;
 import org.sspoid.sspoid.db.chatsession.ChatSessionRepository;
+import org.sspoid.sspoid.db.chatsession.SkinGroup;
 import org.sspoid.sspoid.db.chatsession.SkinType;
 
 import java.util.Arrays;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 public class ChatBotService {
 
     private static final String DEFAULT_SESSION_TITLE = "제목 없음";
-    private static final List<SkinType> DEFAULT_SKIN_TYPES = Arrays.asList(SkinType.values());
+    private static final List<SkinGroup> DEFAULT_SKIN_TYPES = Arrays.asList(SkinGroup.values());
 
     private final ChatSessionRepository chatSessionRepository;
     private final ChatMessageRepository chatMessageRepository;
@@ -87,8 +88,14 @@ public class ChatBotService {
     @Transactional
     public List<ChatMessageResponse> sendMessage(Long id, ChatMessageRequest request) {
 
-        List<SkinType> skinTypes = (request.skinTypes() == null || request.skinTypes().isEmpty())
-                ? DEFAULT_SKIN_TYPES : request.skinTypes();
+        List<SkinGroup> skinGroups = (request.skinGroups() == null || request.skinGroups().isEmpty())
+                ? DEFAULT_SKIN_TYPES : request.skinGroups();
+
+        List<SkinType> skinTypes = skinGroups.stream()
+                .flatMap(group -> SkinType.fromSkinGroup(group).stream())
+                .collect(Collectors.toList());
+
+        log.info("🤍 스킨 타입: {}", skinTypes);
 
         //1. 메세지 전송
         ChatMessage userMessage = ChatMessage.builder()
@@ -103,8 +110,10 @@ public class ChatBotService {
 
         // 2. 각 skinType 별로 AI 응답 생성 + 저장 + DTO 매핑
         List<ChatMessageResponse> botResponses = skinTypes.stream().map(skinType -> {
-            String prompt = promptBuilder.buildPrompt(request.message(), skinType);
-            String aiResponse = callApiService.callChatModelApi(prompt, skinType);
+            String prompt = promptBuilder.buildPrompt(request.message(), skinType.getSkinGroup());
+            log.info("🔍 Sending request to Model API - SkinType: {}, Prompt: {}", skinType, prompt);
+
+            String aiResponse = callApiService.callChatModelApi(prompt, skinType.getSkinGroup());
 
             // BOT 메시지 저장 - skinType은 단일로만 저장
             ChatMessage aiMessage = ChatMessage.builder()
@@ -113,6 +122,7 @@ public class ChatBotService {
                     .skinTypes(List.of(skinType)) // 단일 스킨타입만 저장
                     .message(aiResponse)
                     .build();
+
             chatMessageRepository.save(aiMessage);
 
             log.info("BOT 응답 저장 완료 - Session ID: {}, SkinType: {}, Response Length: {}", id, skinType, aiResponse.length());

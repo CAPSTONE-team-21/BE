@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.sspoid.sspoid.api.dto.model.ChatModelResponse;
 import org.sspoid.sspoid.api.dto.model.ModelPromptRequest;
-import org.sspoid.sspoid.db.chatsession.SkinType;
+import org.sspoid.sspoid.db.chatsession.SkinGroup;
 import reactor.netty.http.client.HttpClient;
 
 import java.nio.charset.StandardCharsets;
@@ -29,10 +29,10 @@ public class CallApiService {
 
     public CallApiService() {
         HttpClient httpClient = HttpClient.create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 100000) // 연결 시도 타임아웃: 10초
-                .responseTimeout(Duration.ofSeconds(300))             // 응답 수신 타임아웃: 30초
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 60000) // 연결 시도 타임아웃: 1분
+                .responseTimeout(Duration.ofSeconds(600))             // 응답 수신 타임아웃: 10분
                 .doOnConnected(conn -> conn
-                        .addHandlerLast(new ReadTimeoutHandler(30, TimeUnit.SECONDS))   // 읽기 타임아웃
+                        .addHandlerLast(new ReadTimeoutHandler(300, TimeUnit.SECONDS))   // 읽기 타임아웃
                         .addHandlerLast(new WriteTimeoutHandler(30, TimeUnit.SECONDS))  // 쓰기 타임아웃
                 );
 
@@ -41,10 +41,10 @@ public class CallApiService {
                 .build();
     }
 
-    public String callChatModelApi(String message, SkinType skinType) {
+    public String callChatModelApi(String message, SkinGroup skinGroup) {
         try {
-            ModelPromptRequest request = new ModelPromptRequest(message, skinType.name());
-            System.out.println("🔍 Sending request to Model1 API: " + request.message());
+            ModelPromptRequest request = new ModelPromptRequest(message, skinGroup.name());
+            System.out.println("📤 [모델 요청] SkinGroup: " + skinGroup.name() + " | Message: " + message);
 
             ChatModelResponse response = webClient.post()
                     .uri(ChatModel_URL)
@@ -55,16 +55,23 @@ public class CallApiService {
                     .onStatus(
                             status -> status.is4xxClientError() || status.is5xxServerError(),  // ✅ 직접 람다로 체크
                             clientResponse -> clientResponse.bodyToMono(String.class).map(errorBody -> {
-                                System.err.println("❌ 모델 API 응답 오류 바디: " + errorBody);
+                                System.err.println("❌ [모델 응답 오류] Status: " + clientResponse.statusCode() + " | Body: " + errorBody);
                                 return new RuntimeException("모델 응답 오류: " + errorBody);
                             })
                     )
                     .bodyToMono(ChatModelResponse.class)
+                    .doOnNext(res -> System.out.println("📥 [모델 응답 수신 완료] 응답 메시지 길이: " + res.message().length()))
                     .block();
+
+            if (response == null || response.message() == null) {
+                System.err.println("⚠️ [모델 응답 없음 또는 null] message=null");
+                throw new RuntimeException("모델 응답이 null입니다");
+            }
 
             return response.message();
         }
         catch (Exception e) {
+            System.err.println("🔥 [모델 API 호출 실패] 에러: " + e.getMessage());
             throw new RuntimeException("Failed to call ChatModelApi", e);
         }
     }
