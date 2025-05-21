@@ -8,10 +8,10 @@ public class ChatPromptBuilder {
 
     public String buildPrompt(String message, SkinGroup skinGroup) {
         return switch (skinGroup){
-            case DRY -> "건성 피부 기준으로 답변해줘: " + message;
-            case OILY -> "지성 피부 기준으로 답변해줘: " + message;
-            case SENSITIVE -> "민감성 피부 기준으로 답변해줘: " + message;
-            case COMBINATION -> "복합성 피부 기준으로 답변해줘: " + message;
+            case DRY -> message;
+            case OILY -> message;
+            case SENSITIVE -> message;
+            case COMBINATION -> message;
         };
     }
 }
