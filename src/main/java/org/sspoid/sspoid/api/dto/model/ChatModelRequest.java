@@ -1,6 +1,6 @@
 package org.sspoid.sspoid.api.dto.model;
 
-public record ModelPromptRequest(
+public record ChatModelRequest(
         String message,
         String skinType
 ) {
