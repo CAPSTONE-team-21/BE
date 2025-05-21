@@ -167,8 +167,7 @@ public class ChatBotService {
 
         log.info("📄 conversation: " + conversation);
 
-        String summary = "세션 " + sessionId + "의 임시 요약 메세지";
-        //String summary = callModel.generateSummary(conversation);
+        String summary = callApiService.callSummaryModelApi();
 
         return new ChatSummaryResponse(summary);
     }
