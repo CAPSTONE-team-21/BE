@@ -17,7 +17,10 @@ import org.sspoid.sspoid.db.chatsession.ChatSession;
 import org.sspoid.sspoid.db.chatsession.ChatSessionRepository;
 import org.sspoid.sspoid.db.chatsession.SkinGroup;
 import org.sspoid.sspoid.db.chatsession.SkinType;
+import org.sspoid.sspoid.db.user.User;
+import org.sspoid.sspoid.db.user.UserRepository;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -34,18 +37,24 @@ public class ChatBotService {
 
     private final ChatSessionRepository chatSessionRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final UserRepository userRepository;
 
     private final ChatPromptBuilder promptBuilder;
     private final CallApiService callApiService;
 
     // 1. 세션 생성
     @Transactional
-    public ChatSessionResponse createSession() {
+    public ChatSessionResponse createSession(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         ChatSession chatSession = ChatSession.builder()
+                .user(user)
                 .title(DEFAULT_SESSION_TITLE)
                 .isBookmark(false)
                 .build();
         chatSessionRepository.save(chatSession);
+
         log.info("새로운 세션 생성 완료 - Session ID: {}", chatSession.getId());
         return ChatSessionResponse.from(chatSession);
 
@@ -53,12 +62,18 @@ public class ChatBotService {
 
     // 2. 세션 제목 수정
     @Transactional
-    public ChatSessionResponse updateTitle(Long id, String newTitle) {
+    public ChatSessionResponse updateTitle(Long id, String newTitle, Long currentUserId) throws AccessDeniedException {
+
         ChatSession session = chatSessionRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("세션 제목 수정 실패 - 존재하지 않는 Session ID: {}", id);
                     return new RuntimeException("Session not found");
                 });
+
+        if (!session.getUser().getId().equals(currentUserId)) {
+            throw new AccessDeniedException("해당 세션에 대한 권한이 없습니다.");
+        }
+
         session.updateTitle(newTitle);
 
         log.info("세션 제목 수정 완료 - Session ID: {}, New Title: {}", id, newTitle);
@@ -66,12 +81,17 @@ public class ChatBotService {
     }
 
     @Transactional
-    public void deleteSession(Long id) {
+    public void deleteSession(Long id, Long currentUserId) throws AccessDeniedException {
         ChatSession session = chatSessionRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("세션 삭제 실패 - 존재하지 않는 Session ID: {}", id);
                     return new RuntimeException("Session not found");
                 });
+
+        if (!session.getUser().getId().equals(currentUserId)) {
+            throw new AccessDeniedException("해당 세션에 대한 권한이 없습니다.");
+        }
+
         chatSessionRepository.delete(session);
         log.info("세션 삭제 완료 - Session ID: {}", id);
     }
@@ -88,7 +108,13 @@ public class ChatBotService {
 
     // 4. 메시지 전송 (유저 메시지 + 챗봇 응답 저장)
     @Transactional
-    public List<ChatMessageResponse> sendMessage(Long id, ChatMessageRequest request) {
+    public List<ChatMessageResponse> sendMessage(Long id, ChatMessageRequest request, Long currentUserId) throws AccessDeniedException {
+
+        ChatSession session = chatSessionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Session not found"));
+        if (!session.getUser().getId().equals(currentUserId)) {
+            throw new AccessDeniedException("해당 세션에 대한 권한이 없습니다.");
+        }
 
         List<SkinGroup> skinGroups = (request.skinTypes() == null || request.skinTypes().isEmpty())
                 ? DEFAULT_SKIN_TYPES : request.skinTypes();
@@ -101,7 +127,7 @@ public class ChatBotService {
 
         //1. 메세지 전송
         ChatMessage userMessage = ChatMessage.builder()
-                .chatSessionId(id)
+                .chatSession(session)
                 .sender(SenderType.USER)
                 .skinTypes(skinTypes)
                 .message(request.message())
@@ -119,7 +145,7 @@ public class ChatBotService {
 
             // BOT 메시지 저장 - skinType은 단일로만 저장
             ChatMessage aiMessage = ChatMessage.builder()
-                    .chatSessionId(id)
+                    .chatSession(session)
                     .sender(SenderType.BOT)
                     .skinTypes(List.of(skinType)) // 단일 스킨타입만 저장
                     .message(aiResponse)
@@ -141,7 +167,14 @@ public class ChatBotService {
     }
 
     // 5. 특정 세션에 저장되어있는 메시지 리스트 조회
-    public List<ChatMessageResponse> getMessagesBySessionId(Long id) {
+    public List<ChatMessageResponse> getMessagesBySessionId(Long id, Long currentUserId) throws AccessDeniedException {
+
+        ChatSession session = chatSessionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Session not found"));
+        if (!session.getUser().getId().equals(currentUserId)) {
+            throw new AccessDeniedException("해당 세션에 대한 권한이 없습니다.");
+        }
+
         List<ChatMessage> messages = chatMessageRepository.findByChatSessionId(id);
 
         log.info("세션 메시지 조회 완료 - Session ID: {}, 메시지 수: {}", id, messages.size());
@@ -154,11 +187,15 @@ public class ChatBotService {
 
     // 6. 요약 생성
     @Transactional
-    public ChatSummaryResponse getSummary(Long sessionId) {
+    public ChatSummaryResponse getSummary(Long sessionId, Long currentUserId) throws AccessDeniedException {
         ChatSession session = chatSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("Session not found"));
 
         log.info("올바른 세션 형식입니다! Session ID: {}", sessionId);
+
+        if (!session.getUser().getId().equals(currentUserId)) {
+            throw new AccessDeniedException("해당 세션에 대한 권한이 없습니다.");
+        }
 
         List<ChatMessage> messages = chatMessageRepository.findByChatSessionId(sessionId);
 

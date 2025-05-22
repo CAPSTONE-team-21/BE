@@ -4,10 +4,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.sspoid.sspoid.common.resolver.CurrentUser;
 import org.sspoid.sspoid.api.dto.auth.EmailSendRequest;
 import org.sspoid.sspoid.api.dto.auth.EmailVerifyRequest;
 import org.sspoid.sspoid.api.dto.auth.LoginRequest;
@@ -68,5 +70,10 @@ public class AuthController {
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
                 body("알 수 없는 오류가 발생하였습니다: " + result.toString());
+    }
+
+    @GetMapping("/test/user")
+    public ResponseEntity<String> testCurrentUser(@CurrentUser Long currentUserId) {
+        return ResponseEntity.ok("현재 유저 ID: " + currentUserId);
     }
 }
