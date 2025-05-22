@@ -10,13 +10,15 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.sspoid.sspoid.api.dto.model.ChatModelResponse;
-import org.sspoid.sspoid.api.dto.model.ModelPromptRequest;
-import org.sspoid.sspoid.db.chatsession.SkinGroup;
+import org.sspoid.sspoid.api.dto.model.ChatModelRequest;
+import org.sspoid.sspoid.api.dto.model.SummaryModelRequest;
+import org.sspoid.sspoid.api.dto.model.SummaryModelResponse;
 import org.sspoid.sspoid.db.chatsession.SkinType;
 import reactor.netty.http.client.HttpClient;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -25,8 +27,11 @@ public class CallApiService {
 
     private final WebClient webClient;
 
-    @Value("${model.api.url}")
-    private String ChatModel_URL;
+    @Value("${model.api.model1-url}")
+    private String ChatModel1_URL;
+
+    @Value("${model.api.model2-url}")
+    private String ChatModel2_URL;
 
     public CallApiService() {
         HttpClient httpClient = HttpClient.create()
@@ -44,11 +49,11 @@ public class CallApiService {
 
     public String callChatModelApi(String message, SkinType skinType) {
         try {
-            ModelPromptRequest request = new ModelPromptRequest(message, skinType.name());
+            ChatModelRequest request = new ChatModelRequest(message, skinType.name());
             System.out.println("📤 [모델 요청] SkinGroup: " + skinType.name() + " | Message: " + message);
 
             ChatModelResponse response = webClient.post()
-                    .uri(ChatModel_URL)
+                    .uri(ChatModel1_URL)
                     .contentType(MediaType.APPLICATION_JSON)
                     .acceptCharset(StandardCharsets.UTF_8)
                     .bodyValue(request)
@@ -70,6 +75,47 @@ public class CallApiService {
             }
 
             return response.message();
+        }
+        catch (Exception e) {
+            System.err.println("🔥 [모델 API 호출 실패] 에러: " + e.getMessage());
+            throw new RuntimeException("Failed to call ChatModelApi", e);
+        }
+    }
+
+    //2번 모델 호출
+    public SummaryModelResponse callSummaryModelApi(List<SummaryModelRequest> requests) {
+        try {
+            System.out.println("📤 [모델 요청] 요약 요청 - 총 메시지 수: " + requests.size());
+
+            SummaryModelResponse response = webClient.post()
+                    .uri(ChatModel2_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .acceptCharset(StandardCharsets.UTF_8)
+                    .bodyValue(requests)
+                    .retrieve()
+                    .onStatus(
+                            status -> status.is4xxClientError() || status.is5xxServerError(),  // ✅ 직접 람다로 체크
+                            clientResponse -> clientResponse.bodyToMono(String.class).map(errorBody -> {
+                                return new RuntimeException("❌ [모델 응답 오류] Status: " + clientResponse.statusCode() + " | Body: " + errorBody);
+                            })
+                    )
+                    .bodyToMono(SummaryModelResponse.class)
+                    .doOnNext(res -> {
+                        System.out.println("🧾 SummaryModelResponse 전체 응답: " + res);
+                        if (res.summarizedMessage() == null) {
+                            System.err.println("🚨 요약 응답 summary=null");
+                        } else {
+                            System.out.println("📥 [모델 응답 수신 완료] 응답 메시지 길이: " + res.summarizedMessage().length());
+                        }
+                    })
+                    .block();
+
+            if (response == null || response.summarizedMessage() == null) {
+                System.err.println("⚠️ [모델 응답 없음 또는 null] summary=null");
+                return new SummaryModelResponse("⚠️ 요약 결과가 없습니다."); // 안전한 fallback
+            }
+
+            return response;
         }
         catch (Exception e) {
             System.err.println("🔥 [모델 API 호출 실패] 에러: " + e.getMessage());

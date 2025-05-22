@@ -69,7 +69,7 @@ public class ChatBotController {
     }
 
     // 5. 대화 요약
-    @PostMapping("/api/chat/sessions/{id}/summary")
+    @GetMapping("/api/chat/sessions/{id}/summary")
     public ResponseEntity<ChatSummaryResponse> getSummary(@PathVariable Long id) {
         return ResponseEntity.ok(chatBotService.getSummary(id));
     }
