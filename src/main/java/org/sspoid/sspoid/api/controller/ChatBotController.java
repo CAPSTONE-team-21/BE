@@ -35,7 +35,7 @@ public class ChatBotController {
             @PathVariable Long id,
             @RequestBody ChatMessageRequest message
     ) {
-        ResponseBodyEmitter emitter = new ResponseBodyEmitter();
+        ResponseBodyEmitter emitter = new ResponseBodyEmitter(0L);
         ObjectMapper objectMapper = new ObjectMapper();
 
         Executors.newSingleThreadExecutor().submit(() -> {
