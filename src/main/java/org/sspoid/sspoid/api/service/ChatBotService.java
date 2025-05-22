@@ -90,6 +90,10 @@ public class ChatBotService {
     @Transactional
     public List<ChatMessageResponse> sendMessage(Long id, ChatMessageRequest request) {
 
+        ChatSession session = chatSessionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Session not found"));
+
+
         List<SkinGroup> skinGroups = (request.skinTypes() == null || request.skinTypes().isEmpty())
                 ? DEFAULT_SKIN_TYPES : request.skinTypes();
 
@@ -101,7 +105,7 @@ public class ChatBotService {
 
         //1. 메세지 전송
         ChatMessage userMessage = ChatMessage.builder()
-                .chatSessionId(id)
+                .chatSession(session)
                 .sender(SenderType.USER)
                 .skinTypes(skinTypes)
                 .message(request.message())
@@ -119,7 +123,7 @@ public class ChatBotService {
 
             // BOT 메시지 저장 - skinType은 단일로만 저장
             ChatMessage aiMessage = ChatMessage.builder()
-                    .chatSessionId(id)
+                    .chatSession(session)
                     .sender(SenderType.BOT)
                     .skinTypes(List.of(skinType)) // 단일 스킨타입만 저장
                     .message(aiResponse)
