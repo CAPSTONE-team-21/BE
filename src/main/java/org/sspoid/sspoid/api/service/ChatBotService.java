@@ -112,7 +112,6 @@ public class ChatBotService {
 
         ChatSession session = chatSessionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Session not found"));
-
         if (!session.getUser().getId().equals(currentUserId)) {
             throw new AccessDeniedException("해당 세션에 대한 권한이 없습니다.");
         }
@@ -168,7 +167,14 @@ public class ChatBotService {
     }
 
     // 5. 특정 세션에 저장되어있는 메시지 리스트 조회
-    public List<ChatMessageResponse> getMessagesBySessionId(Long id) {
+    public List<ChatMessageResponse> getMessagesBySessionId(Long id, Long currentUserId) throws AccessDeniedException {
+
+        ChatSession session = chatSessionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Session not found"));
+        if (!session.getUser().getId().equals(currentUserId)) {
+            throw new AccessDeniedException("해당 세션에 대한 권한이 없습니다.");
+        }
+
         List<ChatMessage> messages = chatMessageRepository.findByChatSessionId(id);
 
         log.info("세션 메시지 조회 완료 - Session ID: {}, 메시지 수: {}", id, messages.size());

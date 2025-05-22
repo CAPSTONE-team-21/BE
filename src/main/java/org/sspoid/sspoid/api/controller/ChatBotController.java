@@ -2,6 +2,7 @@ package org.sspoid.sspoid.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -62,11 +63,17 @@ public class ChatBotController {
         return emitter;
     }
 
-
     // 4. 특정 세션에 저장되어있는 메시지 리스트 조회
     @GetMapping("/api/chat/sessions/{id}/messages")
-    public ResponseEntity<List<ChatMessageResponse>> getMessage(@PathVariable Long id) {
-        return ResponseEntity.ok(chatBotService.getMessagesBySessionId(id));
+    public ResponseEntity<List<ChatMessageResponse>> getMessage(
+            @PathVariable Long id,
+            @CurrentUser Long currentUserId
+    ) {
+        try {
+            return ResponseEntity.ok(chatBotService.getMessagesBySessionId(id, currentUserId));
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(403).build();
+        }
     }
 
     // 5. 대화 요약
@@ -77,7 +84,7 @@ public class ChatBotController {
         try {
             return ResponseEntity.ok(chatBotService.getSummary(id, currentUserId));
         } catch (AccessDeniedException e) {
-                return ResponseEntity.status(403).build();
+            return ResponseEntity.status(403).build();
         }
     }
 }
