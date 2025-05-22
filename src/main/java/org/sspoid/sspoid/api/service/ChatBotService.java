@@ -8,6 +8,8 @@ import org.sspoid.sspoid.api.dto.ChatMessageRequest;
 import org.sspoid.sspoid.api.dto.ChatMessageResponse;
 import org.sspoid.sspoid.api.dto.ChatSessionResponse;
 import org.sspoid.sspoid.api.dto.ChatSummaryResponse;
+import org.sspoid.sspoid.api.dto.model.SummaryModelRequest;
+import org.sspoid.sspoid.api.dto.model.SummaryModelResponse;
 import org.sspoid.sspoid.db.chatmassage.ChatMessage;
 import org.sspoid.sspoid.db.chatmassage.ChatMessageRepository;
 import org.sspoid.sspoid.db.chatmassage.SenderType;
@@ -160,15 +162,17 @@ public class ChatBotService {
 
         List<ChatMessage> messages = chatMessageRepository.findByChatSessionId(sessionId);
 
-        String conversation = messages.stream()
-                .sorted(Comparator.comparing(ChatMessage:: getCreatedAt))
-                .map(msg -> msg.getSender().name() + ": " + msg.getMessage())
-                .collect(Collectors.joining("\n"));
+        List<SummaryModelRequest> requests = messages.stream()
+                .sorted(Comparator.comparing(ChatMessage::getCreatedAt))
+                .map(msg -> new SummaryModelRequest(
+                        msg.getSender(),
+                        msg.getSkinTypes(),
+                        msg.getMessage()
+                ))
+                .toList();
 
-        log.info("📄 conversation: " + conversation);
+        SummaryModelResponse summary = callApiService.callSummaryModelApi(requests);
 
-        String summary = callApiService.callSummaryModelApi();
-
-        return new ChatSummaryResponse(summary);
+        return new ChatSummaryResponse(summary.summary());
     }
 }

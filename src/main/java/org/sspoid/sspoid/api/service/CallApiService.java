@@ -20,6 +20,7 @@ import reactor.netty.http.client.HttpClient;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -83,34 +84,32 @@ public class CallApiService {
         }
     }
 
-    public SummaryModelResponse callSummaryModelApi(SenderType sender, SkinType skinType, String message) {
+    public SummaryModelResponse callSummaryModelApi(List<SummaryModelRequest> requests) {
         try {
-            SummaryModelRequest request = new SummaryModelRequest(sender, skinType, message);
-            System.out.println("📤 [모델 요청] 요약 요청");
+            System.out.println("📤 [모델 요청] 요약 요청 - 총 메시지 수: " + requests.size());
 
             SummaryModelResponse response = webClient.post()
                     .uri(ChatModel2_URL)
                     .contentType(MediaType.APPLICATION_JSON)
                     .acceptCharset(StandardCharsets.UTF_8)
-                    .bodyValue(request)
+                    .bodyValue(requests)
                     .retrieve()
                     .onStatus(
                             status -> status.is4xxClientError() || status.is5xxServerError(),  // ✅ 직접 람다로 체크
                             clientResponse -> clientResponse.bodyToMono(String.class).map(errorBody -> {
-                                System.err.println("❌ [모델 응답 오류] Status: " + clientResponse.statusCode() + " | Body: " + errorBody);
-                                return new RuntimeException("모델 응답 오류: " + errorBody);
+                                return new RuntimeException("❌ [모델 응답 오류] Status: " + clientResponse.statusCode() + " | Body: " + errorBody);
                             })
                     )
-                    .bodyToMono(ChatModelResponse.class)
-                    .doOnNext(res -> System.out.println("📥 [모델 응답 수신 완료] 응답 메시지 길이: " + res.message().length()))
+                    .bodyToMono(SummaryModelResponse.class)
+                    .doOnNext(res -> System.out.println("📥 [모델 응답 수신 완료] 응답 메시지 길이: " + res.summary().length()))
                     .block();
 
-            if (response == null || response.message() == null) {
+            if (response == null || response.summary() == null) {
                 System.err.println("⚠️ [모델 응답 없음 또는 null] message=null");
                 throw new RuntimeException("모델 응답이 null입니다");
             }
 
-            return response.message();
+            return response;
         }
         catch (Exception e) {
             System.err.println("🔥 [모델 API 호출 실패] 에러: " + e.getMessage());
