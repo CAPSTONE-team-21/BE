@@ -115,7 +115,7 @@ public class ChatBotService {
             String prompt = promptBuilder.buildPrompt(request.message(), skinType.getSkinGroup());
             log.info("🔍 Sending request to Model API - SkinType: {}, Prompt: {}", skinType, prompt);
 
-            String aiResponse = callApiService.callChatModelApi(prompt, skinType.getSkinGroup());
+            String aiResponse = callApiService.callChatModelApi(prompt, skinType);
 
             // BOT 메시지 저장 - skinType은 단일로만 저장
             ChatMessage aiMessage = ChatMessage.builder()

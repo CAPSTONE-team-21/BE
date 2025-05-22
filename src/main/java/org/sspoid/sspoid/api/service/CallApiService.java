@@ -13,8 +13,6 @@ import org.sspoid.sspoid.api.dto.model.ChatModelResponse;
 import org.sspoid.sspoid.api.dto.model.ChatModelRequest;
 import org.sspoid.sspoid.api.dto.model.SummaryModelRequest;
 import org.sspoid.sspoid.api.dto.model.SummaryModelResponse;
-import org.sspoid.sspoid.db.chatmassage.SenderType;
-import org.sspoid.sspoid.db.chatsession.SkinGroup;
 import org.sspoid.sspoid.db.chatsession.SkinType;
 import reactor.netty.http.client.HttpClient;
 
@@ -49,10 +47,11 @@ public class CallApiService {
                 .build();
     }
 
-    public String callChatModelApi(String message, SkinGroup skinGroup) {
+    public String callChatModelApi(String message, SkinType skinType) {
         try {
-            ChatModelRequest request = new ChatModelRequest(message, skinGroup.name());
-            System.out.println("📤 [모델 요청] SkinGroup: " + skinGroup.name() + " | Message: " + message);
+
+            ChatModelRequest request = new ChatModelRequest(message, skinType.name());
+            System.out.println("📤 [모델 요청] SkinGroup: " + skinType.name() + " | Message: " + message);
 
             ChatModelResponse response = webClient.post()
                     .uri(ChatModel1_URL)
