@@ -5,9 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,16 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.sspoid.sspoid.api.dto.ChatMessageRequest;
 import org.sspoid.sspoid.api.dto.ChatMessageResponse;
-import org.sspoid.sspoid.api.dto.ChatSessionResponse;
 import org.sspoid.sspoid.api.dto.ChatSummaryResponse;
 import org.sspoid.sspoid.api.service.ChatBotService;
-import org.sspoid.sspoid.db.chatmassage.ChatMessage;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ChatBotController {
@@ -72,6 +68,7 @@ public class ChatBotController {
         try {
             return ResponseEntity.ok(chatBotService.getMessagesBySessionId(id, currentUserId));
         } catch (AccessDeniedException e) {
+            log.warn("🚓 인가 실패: {}", e.getMessage());
             return ResponseEntity.status(403).build();
         }
     }
@@ -84,6 +81,7 @@ public class ChatBotController {
         try {
             return ResponseEntity.ok(chatBotService.getSummary(id, currentUserId));
         } catch (AccessDeniedException e) {
+            log.warn("🚓 인가 실패: {}", e.getMessage());
             return ResponseEntity.status(403).build();
         }
     }
