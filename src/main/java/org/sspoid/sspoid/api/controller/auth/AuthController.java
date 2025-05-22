@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.sspoid.sspoid.api.controller.CurrentUser;
+import org.sspoid.sspoid.common.resolver.CurrentUser;
 import org.sspoid.sspoid.api.dto.auth.EmailSendRequest;
 import org.sspoid.sspoid.api.dto.auth.EmailVerifyRequest;
 import org.sspoid.sspoid.api.dto.auth.LoginRequest;

@@ -1,4 +1,4 @@
-package org.sspoid.sspoid.api.controller;
+package org.sspoid.sspoid.common.resolver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

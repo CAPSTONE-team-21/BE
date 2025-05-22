@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.sspoid.sspoid.api.dto.ChatSessionResponse;
 import org.sspoid.sspoid.api.service.ChatBotService;
+import org.sspoid.sspoid.common.resolver.CurrentUser;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;

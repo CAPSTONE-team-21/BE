@@ -15,6 +15,7 @@ import org.sspoid.sspoid.api.dto.ChatMessageRequest;
 import org.sspoid.sspoid.api.dto.ChatMessageResponse;
 import org.sspoid.sspoid.api.dto.ChatSummaryResponse;
 import org.sspoid.sspoid.api.service.ChatBotService;
+import org.sspoid.sspoid.common.resolver.CurrentUser;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
