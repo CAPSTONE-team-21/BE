@@ -7,7 +7,7 @@ import java.util.List;
 
 public record SummaryModelRequest (
         SenderType sender,
-        List<SkinType> skinType,
+        SkinType skinType,
         String message
 ){
 }
