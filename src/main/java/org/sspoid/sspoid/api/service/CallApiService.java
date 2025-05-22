@@ -49,7 +49,6 @@ public class CallApiService {
 
     public String callChatModelApi(String message, SkinType skinType) {
         try {
-
             ChatModelRequest request = new ChatModelRequest(message, skinType.name());
             System.out.println("📤 [모델 요청] SkinGroup: " + skinType.name() + " | Message: " + message);
 
@@ -83,6 +82,7 @@ public class CallApiService {
         }
     }
 
+    //2번 모델 호출
     public SummaryModelResponse callSummaryModelApi(List<SummaryModelRequest> requests) {
         try {
             System.out.println("📤 [모델 요청] 요약 요청 - 총 메시지 수: " + requests.size());
@@ -100,12 +100,19 @@ public class CallApiService {
                             })
                     )
                     .bodyToMono(SummaryModelResponse.class)
-                    .doOnNext(res -> System.out.println("📥 [모델 응답 수신 완료] 응답 메시지 길이: " + res.summary().length()))
+                    .doOnNext(res -> {
+                        System.out.println("🧾 SummaryModelResponse 전체 응답: " + res);
+                        if (res.summarizedMessage() == null) {
+                            System.err.println("🚨 요약 응답 summary=null");
+                        } else {
+                            System.out.println("📥 [모델 응답 수신 완료] 응답 메시지 길이: " + res.summarizedMessage().length());
+                        }
+                    })
                     .block();
 
-            if (response == null || response.summary() == null) {
-                System.err.println("⚠️ [모델 응답 없음 또는 null] message=null");
-                throw new RuntimeException("모델 응답이 null입니다");
+            if (response == null || response.summarizedMessage() == null) {
+                System.err.println("⚠️ [모델 응답 없음 또는 null] summary=null");
+                return new SummaryModelResponse("⚠️ 요약 결과가 없습니다."); // 안전한 fallback
             }
 
             return response;

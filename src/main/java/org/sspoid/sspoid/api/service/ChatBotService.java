@@ -166,13 +166,13 @@ public class ChatBotService {
                 .sorted(Comparator.comparing(ChatMessage::getCreatedAt))
                 .map(msg -> new SummaryModelRequest(
                         msg.getSender(),
-                        msg.getSkinTypes(),
+                        msg.getSkinTypes().get(0),
                         msg.getMessage()
                 ))
                 .toList();
 
         SummaryModelResponse summary = callApiService.callSummaryModelApi(requests);
 
-        return new ChatSummaryResponse(summary.summary());
+        return new ChatSummaryResponse(summary.summarizedMessage());
     }
 }
