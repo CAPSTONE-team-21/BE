@@ -40,7 +40,7 @@ public class ChatMessage extends BaseEntity {
     @JoinColumn(name = "chat_session_id", nullable = false)
     private ChatSession chatSession;
 
-    @Column(length = 50)
+    @Column(length = 150)
     @Enumerated(EnumType.STRING)
     private SenderType sender;
 
