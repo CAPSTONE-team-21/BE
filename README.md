@@ -55,7 +55,7 @@
 
 
 ### Frontend
-<img src="https://github.com/user-attachments/assets/d4272764-b3dc-4022-b9bd-21bacd53dd45" width="800px" />
+<img src="https://github.com/user-attachments/assets/295ac45a-bba4-45b1-bfc1-2118d24ea1f5" width="800px" />
 
 
 ### Infra
