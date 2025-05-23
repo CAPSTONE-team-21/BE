@@ -8,41 +8,38 @@
 
 ---
 
-## 🙋🏻‍♀️ Member  
+## 🙋🏻‍♀️ Member
+
 <table>
   <tbody>
+    <!-- 사진 -->
     <tr>
-      <!-- AI -->
-      <td align="center">
-        <img src="" width="120px" /><br />
-        <a href="https://github.com/whitesejin"><b>백세진</b></a><br />
-        AI
-      </td>
-      <!-- BE -->
-      <td align="center">
-        <img src="" width="120px" /><br />
-        <a href="https://github.com/leeseojin"><b>이서진</b></a><br />
-        AI
-      </td>
-      <td align="center">
-        <img src="" width="120px" /><br />
-        <a href="https://github.com/haeyoon1"><b>남해윤</b></a><br />
-        BE
-      </td>
-      <!-- FE -->
-      <td align="center">
-        <img src="" width="120px" /><br />
-        <a href="https://github.com/seomikyung"><b>서미경</b></a><br />
-        FE
-      </td>
-      <td align="center">
-        <img src="" width="120px" /><br />
-        <a href="https://github.com/jangseohyun"><b>장서현</b></a><br />
-        FE
-      </td>
+      <td align="center"><img src="https://github.com/user-attachments/assets/863f36f9-1efb-4788-a0b0-6c124a7475a6" width="140px" /></td>
+      <td align="center"><img src="https://github.com/user-attachments/assets/5b2e0abf-c832-4f59-9429-0a7997fa0301" width="140px" /></td>
+      <td align="center"><img src="https://github.com/user-attachments/assets/41446a8d-737a-4d88-b24e-9163b0bf508a" width="140px" /></td>
+      <td align="center"><img src="https://github.com/user-attachments/assets/ae0fb3b1-b74f-4963-ba89-0ff21204098c" width="140px" /></td>
+      <td align="center"><img src="https://github.com/user-attachments/assets/84bb8435-802c-4cf1-a917-44afe6f547df" width="140px" /></td>
+    </tr>
+    <!-- 이름 -->
+    <tr style="border-bottom: 1px solid #d0d7de;">
+      <td align="center"><a href="https://github.com/whitesejin"><b>백세진</b></a></td>
+      <td align="center"><a href="https://github.com/leeseojin"><b>이서진</b></a></td>
+      <td align="center"><a href="https://github.com/haeyoon1"><b>남해윤</b></a></td>
+      <td align="center"><a href="https://github.com/seomikyung"><b>서미경</b></a></td>
+      <td align="center"><a href="https://github.com/jangseohyun"><b>장서현</b></a></td>
+    </tr>
+    <!-- 역할 -->
+    <tr style="border-bottom: 1px solid #d0d7de;">
+      <td align="center">AI</td>
+      <td align="center">AI</td>
+      <td align="center">BE</td>
+      <td align="center">FE</td>
+      <td align="center">FE</td>
     </tr>
   </tbody>
 </table>
+
+
 
 ---
 
