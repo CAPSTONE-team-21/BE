@@ -52,7 +52,9 @@ public class SessionController {
 
     // 5. 세션 목록 조회 (필터 가능)
     @GetMapping("/api/chat/sessions")
-    public ResponseEntity<List<ChatSessionResponse>> getSessions() {
-        return ResponseEntity.ok(chatBotService.getSessions());
+    public ResponseEntity<List<ChatSessionResponse>> getSessions(
+            @CurrentUser Long currentUserId
+    ) throws AccessDeniedException {
+        return ResponseEntity.ok(chatBotService.getSessions(currentUserId));
     }
 }

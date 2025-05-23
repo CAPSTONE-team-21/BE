@@ -97,9 +97,14 @@ public class ChatBotService {
     }
 
     // 3. 전체 세션 리스트 조회
-    public List<ChatSessionResponse> getSessions() {
+    public List<ChatSessionResponse> getSessions(Long currentUserId) throws AccessDeniedException {
         List<ChatSession> sessions = chatSessionRepository.findAll();
-        log.info("전체 세션 조회 완료 - 조회된 세션 수: {}", sessions.size());
+
+        List<ChatSession> authorizedSessions = sessions.stream()        // 현재 사용자에게 속한 세션만 필터링
+                .filter(session -> session.getUser().getId().equals(currentUserId))
+                .toList();
+
+        log.info("사용자 {}의 세션 조회 완료 - 조회된 세션 수: {}", currentUserId, authorizedSessions.size());
 
         return sessions.stream()
                 .map(ChatSessionResponse::from)
