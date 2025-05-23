@@ -1,4 +1,4 @@
-<h1 align="center">🧴 SSPOID 🧴</h1>
+<h1 align="center"> SSPOID </h1>
 
 <p align="center">
   💡 LLM Agent를 활용한 스킨케어 제품 소비자 반응 모사 서비스
