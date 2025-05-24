@@ -77,7 +77,7 @@ public class AuthService {
             return LoginResponse.builder()
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
-                    .name(user.getName())
+                    .nickname(user.getName())
                     .build();
         }
 
@@ -87,7 +87,7 @@ public class AuthService {
         return LoginResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .name(user.getName())
+                .nickname(user.getName())
                 .build();
     }
 
