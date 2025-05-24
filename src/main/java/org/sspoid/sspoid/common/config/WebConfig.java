@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.sspoid.sspoid.common.resolver.CurrentUserArgumentResolver;
 
 import java.util.List;
+import java.util.Locale;
 
 @Configuration
 @RequiredArgsConstructor
@@ -22,7 +23,10 @@ public class WebConfig implements WebMvcConfigurer {
                         "https://sspoid.site",
                         "https://www.sspoid.site",
                         "http://localhost:3000", //배포환경에서 추후 삭제
-                        "http://localhost:5173" //배포환경에서 추후 삭제
+                        "http://localhost:5173", //배포환경에서 추후 삭제
+                        "https://43.203.173.135",
+                        "http://43.203.173.135",
+                        "43.203.173.135"
                         )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowCredentials(true);
