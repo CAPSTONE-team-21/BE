@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.sspoid.sspoid.api.dto.auth.LoginResponse;
 import org.sspoid.sspoid.common.resolver.CurrentUser;
 import org.sspoid.sspoid.api.dto.auth.EmailSendRequest;
 import org.sspoid.sspoid.api.dto.auth.EmailVerifyRequest;
@@ -37,7 +38,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(authService.login(request));
     }
 

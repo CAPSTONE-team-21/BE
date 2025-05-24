@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.sspoid.sspoid.api.dto.auth.LoginRequest;
+import org.sspoid.sspoid.api.dto.auth.LoginResponse;
 import org.sspoid.sspoid.api.dto.auth.SignUpRequest;
 import org.sspoid.sspoid.api.dto.auth.TokenResponse;
 import org.sspoid.sspoid.common.security.JwtTokenProvider;
@@ -55,7 +56,7 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenResponse login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
@@ -73,18 +74,20 @@ public class AuthService {
 
         if (jwtUtil.isValidRefreshToken(refreshToken)) { //refreshtoken 유효성 검증 갱신
             accessToken = jwtUtil.createAccessToken(user);
-            return TokenResponse.builder()
+            return LoginResponse.builder()
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
+                    .name(user.getName())
                     .build();
         }
 
         refreshToken = jwtUtil.createRefreshToken(user);
         refreshTokenEntity.updateToken(refreshToken);
 
-        return TokenResponse.builder()
+        return LoginResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .name(user.getName())
                 .build();
     }
 
