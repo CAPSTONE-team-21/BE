@@ -18,17 +18,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
-                .allowedOriginPatterns(
-                        "https://sspoid.site",
-                        "https://www.sspoid.site",
-                        "http://localhost:3000", //배포환경에서 추후 삭제
-                        "http://localhost:5173", //배포환경에서 추후 삭제
-                        "https://43.203.173.135",
-                        "http://43.203.173.135",
-                        "43.203.173.135"
-                        )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+        registry.addMapping("/*")
+                .allowedOriginPatterns("")
+                .allowedMethods("")
+                .allowedHeaders("")
                 .allowCredentials(true);
     }
 
