@@ -92,7 +92,9 @@ public class ChatBotService {
             throw new AccessDeniedException("해당 세션에 대한 권한이 없습니다.");
         }
 
+        chatMessageRepository.deleteByChatSessionId(id);
         chatSessionRepository.delete(session);
+
         log.info("세션 삭제 완료 - Session ID: {}", id);
     }
 
