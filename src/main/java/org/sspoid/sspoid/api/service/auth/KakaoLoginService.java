@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.sspoid.sspoid.api.dto.auth.KakaoUserInfoResponse;
 import org.sspoid.sspoid.api.dto.auth.KakoTokenResponse;
 import org.sspoid.sspoid.common.config.KakaoConfig;
+import org.sspoid.sspoid.common.exception.DuplicateEmailException;
 import org.sspoid.sspoid.db.user.User;
 import org.sspoid.sspoid.db.user.UserRepository;
 import reactor.core.publisher.Mono;
@@ -64,12 +65,19 @@ public class KakaoLoginService {
     }
 
     public KakaoUserInfoResponse saveUserInfo(KakaoUserInfoResponse kakaoUserInfoResponse) {
-        User user = User.builder()
-                .email(kakaoUserInfoResponse.getKakaoAccount().getEmail())
-                .password(null)
-                .name(kakaoUserInfoResponse.getKakaoAccount().getProfile().getNickname())
-                .build();
-        userRepository.save(user);
+        String email = kakaoUserInfoResponse.getKakaoAccount().getEmail();
+
+        if (!userRepository.existsByEmail(email)) {
+            User user = User.builder()
+                    .email(email)
+                    .password(null)
+                    .name(kakaoUserInfoResponse.getKakaoAccount().getProfile().getNickname())
+                    .build();
+            userRepository.save(user);
+        } else {
+            log.info("🔁 이미 가입된 사용자입니다: {}", email);
+            throw new DuplicateEmailException("이메일이 가입된 사용자입니다");
+        }
         return kakaoUserInfoResponse;
     }
 }
