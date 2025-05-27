@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.sspoid.sspoid.api.dto.auth.KakaoUserInfoResponse;
 import org.sspoid.sspoid.api.dto.auth.KakoTokenResponse;
 import org.sspoid.sspoid.common.config.KakaoConfig;
+import org.sspoid.sspoid.db.user.User;
 import org.sspoid.sspoid.db.user.UserRepository;
 import reactor.core.publisher.Mono;
 
@@ -45,6 +46,8 @@ public class KakaoLoginService {
 
         log.info("엑세스 토큰 수신됨: {}", response.getAccessToken());  // ✅ 토큰 확인
 
+        saveUserInfo(getUserInfo(response.getAccessToken()));
+
         return response.getAccessToken();
     }
 
@@ -58,5 +61,15 @@ public class KakaoLoginService {
                 .onStatus(HttpStatusCode::isError, r -> Mono.error(new RuntimeException("사용자 정보 조회 실패")))
                 .bodyToMono(KakaoUserInfoResponse.class)
                 .block();
+    }
+
+    public KakaoUserInfoResponse saveUserInfo(KakaoUserInfoResponse kakaoUserInfoResponse) {
+        User user = User.builder()
+                .email(kakaoUserInfoResponse.getKakaoAccount().getEmail())
+                .password(null)
+                .name(kakaoUserInfoResponse.getKakaoAccount().getProfile().getNickname())
+                .build();
+        userRepository.save(user);
+        return kakaoUserInfoResponse;
     }
 }
