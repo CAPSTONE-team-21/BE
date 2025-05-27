@@ -1,4 +1,4 @@
-package org.sspoid.sspoid.api.service;
+package org.sspoid.sspoid.api.service.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.sspoid.sspoid.api.dto.auth.KakaoUserInfoResponse;
 import org.sspoid.sspoid.api.dto.auth.KakoTokenResponse;
 import org.sspoid.sspoid.common.config.KakaoConfig;
+import org.sspoid.sspoid.db.user.UserRepository;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -17,6 +18,7 @@ import reactor.core.publisher.Mono;
 public class KakaoLoginService {
 
     private final KakaoConfig kakaoConfig;
+    private final UserRepository userRepository;
 
     public String getAccessToken(String code) {
         log.info("🔑 인가 코드: {}", code);
