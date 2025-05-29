@@ -1,4 +1,4 @@
-package org.sspoid.sspoid.api.service;
+package org.sspoid.sspoid.api.service.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +9,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.sspoid.sspoid.api.dto.auth.KakaoUserInfoResponse;
 import org.sspoid.sspoid.api.dto.auth.KakoTokenResponse;
 import org.sspoid.sspoid.common.config.KakaoConfig;
+import org.sspoid.sspoid.common.exception.DuplicateEmailException;
+import org.sspoid.sspoid.db.user.User;
+import org.sspoid.sspoid.db.user.UserRepository;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -17,6 +20,7 @@ import reactor.core.publisher.Mono;
 public class KakaoLoginService {
 
     private final KakaoConfig kakaoConfig;
+    private final UserRepository userRepository;
 
     public String getAccessToken(String code) {
         log.info("🔑 인가 코드: {}", code);
@@ -43,6 +47,8 @@ public class KakaoLoginService {
 
         log.info("엑세스 토큰 수신됨: {}", response.getAccessToken());  // ✅ 토큰 확인
 
+        saveUserInfo(getUserInfo(response.getAccessToken()));
+
         return response.getAccessToken();
     }
 
@@ -56,5 +62,22 @@ public class KakaoLoginService {
                 .onStatus(HttpStatusCode::isError, r -> Mono.error(new RuntimeException("사용자 정보 조회 실패")))
                 .bodyToMono(KakaoUserInfoResponse.class)
                 .block();
+    }
+
+    public KakaoUserInfoResponse saveUserInfo(KakaoUserInfoResponse kakaoUserInfoResponse) {
+        String email = kakaoUserInfoResponse.getKakaoAccount().getEmail();
+
+        if (!userRepository.existsByEmail(email)) {
+            User user = User.builder()
+                    .email(email)
+                    .password(null)
+                    .name(kakaoUserInfoResponse.getKakaoAccount().getProfile().getNickname())
+                    .build();
+            userRepository.save(user);
+        } else {
+            log.info("🔁 이미 가입된 사용자입니다: {}", email);
+            throw new DuplicateEmailException("이메일이 가입된 사용자입니다");
+        }
+        return kakaoUserInfoResponse;
     }
 }

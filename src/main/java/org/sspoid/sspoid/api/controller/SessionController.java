@@ -40,7 +40,7 @@ public class SessionController {
         return ResponseEntity.ok(chatBotService.updateTitle(id, newTitle, currentUserId));
     }
 
-    //세션 삭제
+    //4. 세션 삭제
     @DeleteMapping("/api/chat/sessions/{id}")
     public ResponseEntity<Void> deleteSession(
             @PathVariable Long id,
