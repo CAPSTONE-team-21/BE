@@ -108,7 +108,7 @@ public class ChatBotService {
 
         log.info("사용자 {}의 세션 조회 완료 - 조회된 세션 수: {}", currentUserId, authorizedSessions.size());
 
-        return sessions.stream()
+        return authorizedSessions.stream()
                 .map(ChatSessionResponse::from)
                 .toList();
     }
