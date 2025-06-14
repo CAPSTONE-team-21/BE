@@ -4,7 +4,10 @@
   💡 LLM Agent를 활용한 스킨케어 제품 소비자 반응 모사 서비스
 </p>
 
-// 이미지1 추가
+<!-- 이미지1 추가 -->
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ac5f1745-00a0-4547-a62c-28740afef611" width="700px" />
+</p>
 
 ---
 
@@ -39,12 +42,24 @@
   </tbody>
 </table>
 
-
-
 ---
 
 ## 🖥️ Service
-//이미지 추가
+
+### 💬 채팅 기능
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9a9032b8-3688-44bd-a7b3-d026951ea0e3" width="700px" />
+</p>
+
+### 🧾 요약 기능
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/63b4d616-677c-4f53-b06f-264065256e46" width="700px" />
+</p>
+
+### 📂 사이드바 기능
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/920c09d9-9b53-45f9-b1c8-de7b4cd39777" width="700px" />
+</p>
 
 ---
 
@@ -53,12 +68,8 @@
 ### Backend
 <img src="https://github.com/user-attachments/assets/d4272764-b3dc-4022-b9bd-21bacd53dd45" width="800px" />
 
-
 ### Frontend
 <img src="https://github.com/user-attachments/assets/295ac45a-bba4-45b1-bfc1-2118d24ea1f5" width="800px" />
 
-
 ### Infra
 <img src="https://github.com/user-attachments/assets/2ca93309-ec35-411a-8557-4922d2b62a3a" width="800px" />
-
-
